@@ -1,27 +1,20 @@
 {
-  "name": "sit725_trial_shift",
+  "name": "group-project",
   "version": "1.0.0",
-  "description": "SIT 725 Group Project",
-  "homepage": "https://github.com/S224734529/SIT725_Trial_Shift#readme",
-  "bugs": {
-    "url": "https://github.com/S224734529/SIT725_Trial_Shift/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/S224734529/SIT725_Trial_Shift.git"
-  },
-  "license": "MIT",
-  "author": "SIT725 Group Project",
-  "type": "commonjs",
-  "main": "index.js",
+  "description": "A group project using Node.js, MongoDB, and MVC structure.",
+  "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "mongoose": "^8.18.0"
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
-  }
+    "nodemon": "^2.0.4"
+  },
+  "author": "Your Name",
+  "license": "ISC"
 }
