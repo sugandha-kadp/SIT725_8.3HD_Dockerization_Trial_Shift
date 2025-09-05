@@ -31,7 +31,7 @@ group-project
 
 1. **Clone the Repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/S224734529/SIT725_Trial_Shift.git
    cd group-project
    ```
 
@@ -49,10 +49,10 @@ group-project
    ```bash
    node src/app.js
    ```
-   The application will be running on `http://localhost:3000`.
+   The application will be running on `http://localhost:5000`.
 
 ## Usage
-- Navigate to the main page at `http://localhost:3000` to access the application.
+- Navigate to the main page at `http://localhost:5000` to access the application.
 - Use the user-related functionalities available on the user page.
 
 ## Contributing

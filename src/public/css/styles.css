@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #ecf2f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background: #f6f6f6;
+  cursor: pointer;
+  border-radius: 20px;
+  margin: 0 5px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.tab-btn.active {
+  background: #fff;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.form-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+.input-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.input-field i {
+  color: #777;
+  margin-right: 8px;
+}
+
+.input-field input, 
+.input-field select {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+.form-box button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #0077ff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-box button:hover {
+  background: #005fcc;
+}
+
+.form-box a {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #0077ff;
+  text-decoration: none;
+}
+
+.form-box a:hover {
+  text-decoration: underline;
+}
+.checkbox-group {
+  margin-bottom: 15px;
+}
+
+@media(max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+  .tab-btn {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
