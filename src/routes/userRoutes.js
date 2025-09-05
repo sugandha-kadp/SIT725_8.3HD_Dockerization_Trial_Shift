@@ -1,13 +1,16 @@
-const express = require('express');
-const UserController = require('../controllers/userController');
-
+const express = require("express");
 const router = express.Router();
+const userController = require("../controllers/userController");
+const { authMiddleware, roleMiddleware } = require("../middleware/authMiddleware");
 
-const userController = new UserController();
+// Auth routes
+router.post("/register", userController.register);
+router.post("/login", userController.login);
 
-router.post('/users', userController.createUser.bind(userController));
-router.get('/users/:id', userController.getUser.bind(userController));
-router.put('/users/:id', userController.updateUser.bind(userController));
-router.delete('/users/:id', userController.deleteUser.bind(userController));
+// Protected routes
+router.get("/dashboard", authMiddleware, userController.dashboard);
+
+// Admin only
+router.get("/admin", authMiddleware, roleMiddleware("admin"), userController.adminPanel);
 
 module.exports = router;
