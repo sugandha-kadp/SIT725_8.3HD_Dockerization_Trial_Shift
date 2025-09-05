@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Register</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <img src="/img/logo.png" alt="Logo" width="120" style="margin-bottom: 10px;">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login" class="form-box">
+      <form id="loginForm">
+        <div class="input-field">
+          <i class="material-icons">email</i>
+          <input type="email" id="loginEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="input-field">
+          <i class="material-icons">lock</i>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required>
+        </div>
+        <button type="submit">Login</button>
+        <a href="#">Forgot your password? Reset.</a>
+      </form>
+    </div>
+
+    <!-- Register Form -->
+    <div id="register" class="form-box" style="display:none;">
+      <form id="registerForm">
+        <div class="input-field">
+          <i class="material-icons">person</i>
+          <input type="text" id="registerName" placeholder="Enter your name" required>
+        </div>
+        <div class="input-field">
+          <i class="material-icons">email</i>
+          <input type="email" id="registerEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="input-field">
+          <i class="material-icons">lock</i>
+          <input type="password" id="registerPassword" placeholder="Enter your password" required>
+        </div>
+        <div class="input-field">
+          <i class="material-icons">lock</i>
+          <input type="password" id="registerConfirm" placeholder="Confirm the password" required>
+        </div>
+        <div class="input-field">
+          <i class="material-icons">public</i>
+          <select id="registerState" required>
+            <option value="">Select your state</option>
+            <option>New South Wales</option>
+            <option>Victoria</option>
+            <option>Queensland</option>
+            <option>Western Australia</option>
+            <option>South Australia</option>
+            <option>Tasmania</option>
+            <option>Northern Territory</option>
+            <option>Australian Capital Territory</option>
+          </select>
+        </div>
+        <div class="checkbox-group">
+          <label><input type="radio" name="role" value="employer" required> Employer</label>
+          <label><input type="radio" name="role" value="jobseeker"> Job Seeker</label>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      document.getElementById('login').style.display = (tab === 'login') ? 'block' : 'none';
+      document.getElementById('register').style.display = (tab === 'register') ? 'block' : 'none';
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
+    }
+
+    // LOGIN FORM SUBMIT
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        window.location.href = "/dashboard.html";
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    });
+
+    // REGISTER FORM SUBMIT
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirm = document.getElementById('registerConfirm').value;
+      const state = document.getElementById('registerState').value;
+      const role = document.querySelector('input[name="role"]:checked')?.value;
+
+      if (password !== confirm) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, state, role })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        switchTab('login');
+      } else {
+        alert(data.message || 'Registration failed');
+      }
+    });
+  </script>
+</body>
+</html>
