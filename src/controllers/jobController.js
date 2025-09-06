@@ -26,3 +26,27 @@ exports.createJob = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// Update an existing job
+exports.updateJob = async (req, res) => {
+  try {
+    const { id } = req.params; // Job ID from the URL
+    const { title, category, location, shiftDetails } = req.body;
+    const employerId = '12345'; // Temporary placeholder ID
+
+    const job = await Job.findOneAndUpdate(
+      { _id: id, employerId }, // Find job by ID and employerId
+      { title, category, location, shiftDetails, employerId },
+      { new: true, runValidators: true } // Return the updated document and run validation
+    );
+
+    if (!job) {
+      return res.status(404).json({ message: 'Job not found or unauthorized' });
+    }
+
+    res.status(200).json(job);
+  } catch (error) {
+    console.error('Error updating job:', error.message);
+    res.status(400).json({ message: error.message });
+  }
+};
