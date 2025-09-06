@@ -50,3 +50,23 @@ exports.updateJob = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// Delete an existing job
+exports.deleteJob = async (req, res) => {
+  try {
+    const { id } = req.params; // Job ID from the URL
+    const employerId = '12345'; // Temporary placeholder ID
+
+    const job = await Job.findOneAndDelete({ _id: id, employerId });
+
+    if (!job) {
+      return res.status(404).json({ message: 'Job not found or unauthorized' });
+    }
+
+    console.log('Job deleted:', job);
+    res.status(200).json({ message: 'Job deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting job:', error.message);
+    res.status(400).json({ message: error.message });
+  }
+};
