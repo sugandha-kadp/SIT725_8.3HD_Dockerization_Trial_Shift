@@ -105,7 +105,7 @@
     // LOGIN FORM SUBMIT
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      showError('login', ''); // Clear previous error
+      showError('login', '');
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
 
@@ -119,14 +119,16 @@
         return;
       }
 
-      const res = await fetch('/login', {
+      const res = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data.token) {
+        // save JWT token
+        localStorage.setItem("token", data.token);
         showSuccess('login', 'Login successful! Redirecting...');
         setTimeout(() => {
           window.location.href = "/dashboard.html";
@@ -173,7 +175,7 @@
         return;
       }
 
-      const res = await fetch('/register', {
+      const res = await fetch('/api/users/register', {   // 🔑 updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, state, role })
@@ -182,7 +184,7 @@
       const data = await res.json();
       if (res.ok) {
         switchTab('login');
-        showError('login', ''); // Clear error
+        showError('login', '');
         showSuccess('login', 'Registration successful! Please login.');
       } else {
         showError('register', data.message || 'Registration failed');

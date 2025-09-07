@@ -1,4 +1,4 @@
-# Group Project
+# Trial Shift
 
 ## Overview
 This project is a web application built using Node.js, Vanilla JavaScript, HTML & CSS (Materialize), and MongoDB. It follows the MVC (Model-View-Controller) architecture, ensuring a clear separation of concerns.
@@ -32,13 +32,14 @@ group-project
 1. **Clone the Repository**
    ```bash
    git clone https://github.com/S224734529/SIT725_Trial_Shift.git
-   cd group-project
    ```
 
 2. **Install Dependencies**
    Make sure you have Node.js installed. Then run:
    ```bash
    npm install
+
+   npm install express mongoose dotenv jsonwebtoken bcrypt
    ```
 
 3. **Environment Variables**

@@ -42,7 +42,7 @@ body {
   background: #fff;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .input-field {
@@ -59,7 +59,7 @@ body {
   margin-right: 8px;
 }
 
-.input-field input, 
+.input-field input,
 .input-field select {
   border: none;
   outline: none;
@@ -96,6 +96,7 @@ body {
 .form-box a:hover {
   text-decoration: underline;
 }
+
 .checkbox-group {
   margin-bottom: 15px;
 }
@@ -122,10 +123,112 @@ body {
   display: none;
 }
 
+/* Sidebar */
+.sidebar {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  background: #2c3e50;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar .logo img {
+  width: 80px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+.sidebar ul li i {
+  margin-right: 10px;
+}
+
+.sidebar ul li:hover {
+  background: #34495e;
+}
+
+/* Main content */
+.main-content {
+  margin-left: 250px;
+  margin-top: 60px;
+  padding: 20px;
+  background: #ecf0f1;
+  min-height: calc(100vh - 60px);
+}
+
+/* Topbar Right Section */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  right: 0;
+  height: 60px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.profile-icon {
+  font-size: 32px;
+  color: #2c3e50;
+  cursor: pointer;
+}
+
+.logout-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+}
+
+.welcome {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
 @media(max-width: 480px) {
   .container {
     padding: 10px;
   }
+
   .tab-btn {
     font-size: 14px;
     padding: 8px;
