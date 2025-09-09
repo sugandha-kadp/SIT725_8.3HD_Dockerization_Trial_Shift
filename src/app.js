@@ -31,7 +31,7 @@ app.use("/api", jobRoutes);
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  dbName: "trial_shift" // Explicitly set the database name
+  dbName: "group_project" // Explicitly set the database name
 })
   .then(() => {
     console.log("MongoDB connected to:", mongoose.connection.db.databaseName);
