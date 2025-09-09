@@ -1,25 +1,33 @@
 const Job = require('../models/job');
+const Category = require('../models/category');
 
 // Create a new job
 exports.createJob = async (req, res) => {
   try {
-    console.log('Request body:', req.body); // Log the incoming data
+    console.log('Request body:', req.body);
     const { title, category, location, shiftDetails } = req.body;
-    const employerId = '12345'; // Temporary placeholder ID for testing
+    const employerId = '12345'; // Temporary placeholder ID
 
     if (!title || !category || !location || !shiftDetails) {
       throw new Error('All fields (title, category, location, shiftDetails) are required');
     }
 
+    // Verify category exists or create it if not (temporary for testing)
+    let categoryDoc = await Category.findOne({ name: category });
+    if (!categoryDoc) {
+      categoryDoc = await Category.create({ name: category });
+    }
+
     const job = new Job({
       title,
-      category,
+      category: categoryDoc._id,
       location,
       shiftDetails,
       employerId
     });
 
     const savedJob = await job.save();
+    console.log('Job saved:', savedJob);
     res.status(201).json(savedJob);
   } catch (error) {
     console.error('Error creating job:', error.message);
@@ -30,20 +38,26 @@ exports.createJob = async (req, res) => {
 // Update an existing job
 exports.updateJob = async (req, res) => {
   try {
-    const { id } = req.params; // Job ID from the URL
+    const { id } = req.params;
     const { title, category, location, shiftDetails } = req.body;
     const employerId = '12345'; // Temporary placeholder ID
 
+    let categoryDoc = await Category.findOne({ name: category });
+    if (!categoryDoc && category) {
+      categoryDoc = await Category.create({ name: category });
+    }
+
     const job = await Job.findOneAndUpdate(
-      { _id: id, employerId }, // Find job by ID and employerId
-      { title, category, location, shiftDetails, employerId },
-      { new: true, runValidators: true } // Return the updated document and run validation
+      { _id: id, employerId },
+      { title, category: categoryDoc ? categoryDoc._id : undefined, location, shiftDetails, employerId },
+      { new: true, runValidators: true, useFindAndModify: false }
     );
 
     if (!job) {
       return res.status(404).json({ message: 'Job not found or unauthorized' });
     }
 
+    console.log('Job updated:', job);
     res.status(200).json(job);
   } catch (error) {
     console.error('Error updating job:', error.message);
@@ -52,20 +66,24 @@ exports.updateJob = async (req, res) => {
 };
 
 // Delete an existing job
-exports.deleteJob = async (req, res) => {
-  try {
-    const { id } = req.params; // Job ID from the URL
+exports.deleteJob = async (req, res) => 
+  {
+  try 
+  {
+    const { id } = req.params;
     const employerId = '12345'; // Temporary placeholder ID
 
     const job = await Job.findOneAndDelete({ _id: id, employerId });
 
-    if (!job) {
+    if (!job) 
+      {
       return res.status(404).json({ message: 'Job not found or unauthorized' });
-    }
+      }
 
     console.log('Job deleted:', job);
     res.status(200).json({ message: 'Job deleted successfully' });
-  } catch (error) {
+  } catch (error) 
+  {
     console.error('Error deleting job:', error.message);
     res.status(400).json({ message: error.message });
   }

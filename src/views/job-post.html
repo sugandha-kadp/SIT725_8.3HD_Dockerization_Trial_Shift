@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Post a Job - Trial Shift</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/job-post.css"> <!-- Corrected to styles.css -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/job-post.css">
 </head>
@@ -66,11 +66,32 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      M.AutoInit(); // Initialize all Materialize components
-      // Ensure textarea label works correctly
-      M.updateTextFields();
-    });
+  document.addEventListener('DOMContentLoaded', function() {
+    M.AutoInit();
+    M.updateTextFields();
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault(); // Prevent default form submission
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      console.log('Form data:', data);
+      fetch('/api/jobs', {
+        method: 'POST',
+        body: new URLSearchParams(data),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(response => response.json())
+        .then(data => console.log('Success:', data))
+        .catch(error => console.error('Error:', error));
+      // Disable the form temporarily to prevent multiple submissions
+      this.querySelector('button[type="submit"]').disabled = true;
+      setTimeout(() => {
+        this.querySelector('button[type="submit"]').disabled = false;
+      }, 2000); // Re-enable after 2 seconds
+    }, { once: true }); // Ensure the event listener runs only once per page load
+  });
   </script>
 </body>
 </html>
