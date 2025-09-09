@@ -20,6 +20,8 @@
     <!-- Login Form -->
     <div id="login" class="form-box">
       <form id="loginForm">
+        <div id="loginSuccess" class="success-message"></div>
+        <div id="loginError" class="error-message"></div>
         <div class="input-field">
           <i class="material-icons">email</i>
           <input type="email" id="loginEmail" placeholder="Enter your email" required>
@@ -36,6 +38,7 @@
     <!-- Register Form -->
     <div id="register" class="form-box" style="display:none;">
       <form id="registerForm">
+        <div id="registerError" class="error-message"></div>
         <div class="input-field">
           <i class="material-icons">person</i>
           <input type="text" id="registerName" placeholder="Enter your name" required>
@@ -83,42 +86,96 @@
       document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
     }
 
+    function showError(form, message) {
+      const errorDiv = document.getElementById(form + "Error");
+      errorDiv.textContent = message;
+      errorDiv.style.display = message ? "block" : "none";
+    }
+
+    function showSuccess(form, message) {
+      const successDiv = document.getElementById(form + "Success");
+      successDiv.textContent = message;
+      successDiv.style.display = message ? "block" : "none";
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     // LOGIN FORM SUBMIT
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
+      showError('login', '');
+      const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
 
-      const res = await fetch('/login', {
+      // Validation
+      if (!validateEmail(email)) {
+        showError('login', 'Please enter a valid email address.');
+        return;
+      }
+      if (!password) {
+        showError('login', 'Please enter your password.');
+        return;
+      }
+
+      const res = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
       const data = await res.json();
-      if (res.ok) {
-        window.location.href = "/dashboard.html";
+      if (res.ok && data.token) {
+        // save JWT token
+        localStorage.setItem("token", data.token);
+        showSuccess('login', 'Login successful! Redirecting...');
+        setTimeout(() => {
+          window.location.href = "/dashboard.html";
+        }, 2000);
       } else {
-        alert(data.message || 'Login failed');
+        showError('login', data.message || 'Login failed');
       }
     });
 
     // REGISTER FORM SUBMIT
     document.getElementById('registerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const name = document.getElementById('registerName').value;
-      const email = document.getElementById('registerEmail').value;
+      showError('register', ''); // Clear previous error
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
       const password = document.getElementById('registerPassword').value;
       const confirm = document.getElementById('registerConfirm').value;
       const state = document.getElementById('registerState').value;
       const role = document.querySelector('input[name="role"]:checked')?.value;
 
+      // Validation
+      if (!name) {
+        showError('register', 'Please enter your name.');
+        return;
+      }
+      if (!validateEmail(email)) {
+        showError('register', 'Please enter a valid email address.');
+        return;
+      }
+      if (password.length < 6) {
+        showError('register', 'Password must be at least 6 characters.');
+        return;
+      }
       if (password !== confirm) {
-        alert('Passwords do not match!');
+        showError('register', 'Passwords do not match!');
+        return;
+      }
+      if (!state) {
+        showError('register', 'Please select your state.');
+        return;
+      }
+      if (!role) {
+        showError('register', 'Please select your role.');
         return;
       }
 
-      const res = await fetch('/register', {
+      const res = await fetch('/api/users/register', {   // 🔑 updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, state, role })
@@ -127,8 +184,10 @@
       const data = await res.json();
       if (res.ok) {
         switchTab('login');
+        showError('login', '');
+        showSuccess('login', 'Registration successful! Please login.');
       } else {
-        alert(data.message || 'Registration failed');
+        showError('register', data.message || 'Registration failed');
       }
     });
   </script>
