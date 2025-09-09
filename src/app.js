@@ -24,12 +24,18 @@ app.get("/job-post", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "/job-post.html"));
 });
 
+const jobRoutes = require("./routes/jobRoutes");
+app.use("/api", jobRoutes);
+
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  dbName: "trial_shift" // Explicitly set the database name
 })
-  .then(() => console.log("MongoDB connected"))
+  .then(() => {
+    console.log("MongoDB connected to:", mongoose.connection.db.databaseName);
+  })
   .catch(err => console.error("MongoDB connection error:", err));
 
 // Start server
