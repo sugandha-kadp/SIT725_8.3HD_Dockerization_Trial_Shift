@@ -25,7 +25,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Routes
 const userRoutes = require("./routes/userRoutes");
-app.use("/api/users", userRoutes); 
+const contentRoutes = require("./routes/contentRoutes");
+app.use("/api/users", userRoutes);
+app.use("/api/content", contentRoutes);
 
 // Start server
 app.listen(PORT, () => {
