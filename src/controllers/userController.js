@@ -53,59 +53,48 @@ exports.login = async (req, res) => {
   }
 };
 
-// Get current user profile
+// Get profile
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
-
     res.json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Failed to load profile." });
   }
 };
 
-// Update user profile (only jobseekers & employers)
+// Update profile (requires admin approval)
 exports.updateProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-
-    if (!user) return res.status(404).json({ message: "User not found" });
-    if (user.role === "admin") {
-      return res.status(403).json({ message: "Admins cannot update profile" });
+    if (req.user.role === "admin") {
+      return res.status(403).json({ message: "Admins cannot update profile." });
     }
 
-    const { name, state } = req.body;
-    if (name) user.name = name;
-    if (state) user.state = state;
+    const updates = {
+      name: req.body.name,
+      state: req.body.state,
+      profilePic: req.file ? "/uploads/" + req.file.filename : undefined
+    };
 
-    // handle profile picture (if uploaded via multer)
-    if (req.file) {
-      user.profilePicture = `/uploads/${req.file.filename}`;
-    }
+    await User.findByIdAndUpdate(req.user.id, { pendingApproval: updates });
 
-    await user.save();
-    res.json({ message: "Profile updated, pending admin approval", user });
+    res.json({ message: "Profile update submitted for admin approval." });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Update failed." });
   }
 };
 
 // Delete profile picture
 exports.deleteProfilePicture = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-
-    if (!user) return res.status(404).json({ message: "User not found" });
-    if (user.role === "admin") {
-      return res.status(403).json({ message: "Admins cannot update profile" });
+    if (req.user.role === "admin") {
+      return res.status(403).json({ message: "Admins cannot update profile." });
     }
 
-    user.profilePicture = null;
-    await user.save();
+    await User.findByIdAndUpdate(req.user.id, { $unset: { profilePic: "" } });
 
-    res.json({ message: "Profile picture deleted successfully" });
+    res.json({ message: "Profile picture deleted." });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: "Failed to delete picture." });
   }
 };
