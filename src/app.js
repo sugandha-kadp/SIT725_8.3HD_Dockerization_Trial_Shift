@@ -9,7 +9,13 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.set('Content-Type', 'text/css');
+    }
+  }
+}));
 
 // Routes
 app.get("/", (req, res) => {
@@ -30,8 +36,7 @@ app.use("/api", jobRoutes);
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "group_project" // Explicitly set the database name
+  useUnifiedTopology: true
 })
   .then(() => {
     console.log("MongoDB connected to:", mongoose.connection.db.databaseName);
