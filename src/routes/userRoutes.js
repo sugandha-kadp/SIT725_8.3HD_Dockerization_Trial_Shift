@@ -39,9 +39,6 @@ router.get("/employer", authenticate, authorize("employer"), (req, res) => {
 // Get profile
 router.get("/profile", authenticate, async (req, res) => {
   try {
-    if (req.user.role === "admin") {
-      return res.status(403).json({ message: "Admins cannot edit profile." });
-    }
     const user = await User.findById(req.user.id).select("-password");
     res.json(user);
   } catch (err) {

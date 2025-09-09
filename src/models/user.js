@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["admin", "employer", "jobseeker"], default: "jobseeker" },
-  profilePicture: { type: String }, // optional
-  state: { type: String } // optional
+  profilePicture: { type: String },
+  state: { type: String }
 });
 
 // Hash password before saving

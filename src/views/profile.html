@@ -127,7 +127,7 @@
       <div id="msgErr" class="msg err"></div>
 
       <!-- Profile picture -->
-      <div class="pic-wrap">
+      <div class="pic-wrap" id="profilePictureSection">
         <img id="profilePreview" class="avatar" alt="Profile picture">
         <div style="margin-top:6px;">
           <input type="file" id="profilePic" name="profilePic" accept="image/*">
@@ -138,7 +138,7 @@
       </div>
 
       <!-- Form -->
-      <form id="profileForm" enctype="multipart/form-data">
+      <form id="profileForm">
         <div class="form-grid">
           <div class="label"><i class="material-icons">person</i> Full Name</div>
           <div class="field"><input type="text" id="name" name="name" required></div>
@@ -154,7 +154,7 @@
         </div>
 
         <div class="actions">
-          <button type="submit" class="btn"> Save Changes</button>
+          <button type="submit" class="btn" id="saveProfileBtn"> Save Changes</button>
         </div>
       </form>
     </section>
@@ -189,10 +189,7 @@
         if (!res.ok) throw new Error("Failed to load profile");
         const user = await res.json();
 
-        document.getElementById("name").value  = user.name  || "";
-        document.getElementById("email").value = user.email || "";
-        document.getElementById("state").value = user.state || "";
-        document.getElementById("role").value  = user.role  || "";
+        renderProfile(user);
 
         const preview = document.getElementById("profilePreview");
         const delBtn  = document.getElementById("deletePicBtn");
@@ -206,6 +203,26 @@
         }
       } catch (err) {
         showErr(err.message);
+      }
+    }
+
+    // Render profile data
+    function renderProfile(user) {
+      document.getElementById('name').value = user.name;
+      document.getElementById('email').value = user.email;
+      document.getElementById('state').value = user.state;
+      document.getElementById('role').value = user.role;
+
+      if (user.role === "admin") {
+        // Disable editing
+        document.getElementById('name').setAttribute('disabled', true);
+        document.getElementById('email').setAttribute('disabled', true);
+        document.getElementById('state').setAttribute('disabled', true);
+        document.getElementById('role').setAttribute('disabled', true);
+
+        // Hide save button and profile picture section
+        document.getElementById('saveProfileBtn').style.display = 'none';
+        document.getElementById('profilePictureSection').style.display = 'none';
       }
     }
 
