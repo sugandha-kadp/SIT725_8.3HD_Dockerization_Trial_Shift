@@ -5,7 +5,9 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ["admin", "employer", "jobseeker"], default: "jobseeker" }
+  role: { type: String, enum: ["admin", "employer", "jobseeker"], default: "jobseeker" },
+  profilePicture: { type: String }, // optional
+  state: { type: String } // optional
 });
 
 // Hash password before saving
@@ -20,4 +22,6 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+
+module.exports = User;
