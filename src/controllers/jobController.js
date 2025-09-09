@@ -12,7 +12,6 @@ exports.createJob = async (req, res) => {
       throw new Error('All fields (title, category, location, shiftDetails) are required');
     }
 
-    // Verify category exists or create it if not (temporary for testing)
     let categoryDoc = await Category.findOne({ name: category });
     if (!categoryDoc) {
       categoryDoc = await Category.create({ name: category });
@@ -66,25 +65,45 @@ exports.updateJob = async (req, res) => {
 };
 
 // Delete an existing job
-exports.deleteJob = async (req, res) => 
-  {
-  try 
-  {
+exports.deleteJob = async (req, res) => {
+  try {
     const { id } = req.params;
     const employerId = '12345'; // Temporary placeholder ID
 
     const job = await Job.findOneAndDelete({ _id: id, employerId });
 
-    if (!job) 
-      {
+    if (!job) {
       return res.status(404).json({ message: 'Job not found or unauthorized' });
-      }
+    }
 
     console.log('Job deleted:', job);
     res.status(200).json({ message: 'Job deleted successfully' });
-  } catch (error) 
-  {
+  } catch (error) {
     console.error('Error deleting job:', error.message);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Bulk delete jobs
+exports.bulkDeleteJobs = async (req, res) => {
+  try {
+    const { jobIds } = req.body; // Array of job IDs to delete
+    const employerId = '12345'; // Temporary placeholder ID
+
+    if (!jobIds || !Array.isArray(jobIds) || jobIds.length === 0) {
+      throw new Error('Job IDs array is required');
+    }
+
+    const result = await Job.deleteMany({ _id: { $in: jobIds }, employerId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No jobs found or unauthorized to delete' });
+    }
+
+    console.log('Bulk delete result:', result);
+    res.status(200).json({ message: `${result.deletedCount} job(s) deleted successfully` });
+  } catch (error) {
+    console.error('Error bulk deleting jobs:', error.message);
     res.status(400).json({ message: error.message });
   }
 };

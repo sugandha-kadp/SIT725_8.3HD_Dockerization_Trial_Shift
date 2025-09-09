@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Post a Job - Trial Shift</title>
-  <link rel="stylesheet" href="/css/job-post.css"> <!-- Corrected to styles.css -->
+  <link rel="stylesheet" href="/css/job-post.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/job-post.css">
 </head>
@@ -13,12 +13,12 @@
     <h1>Post a New Job</h1>
     <div class="row">
       <div class="col s12">
-        <div class="card white" style="border-radius: 15px;">
+        <div class="card" id="jobFormCard">
           <div class="card-content">
-            <form action="/api/jobs" method="POST" class="col s12">
+            <form action="/api/jobs" method="POST" class="col s12" id="jobForm">
               <div class="row">
                 <div class="input-field col s12">
-                  <input type="text" id="title" name="title" required placeholder="Enter job title">
+                  <input type="text" id="title" name="title" required>
                   <label for="title">Job Title</label>
                 </div>
               </div>
@@ -38,60 +38,82 @@
               </div>
               <div class="row">
                 <div class="input-field col s12">
-                  <input type="text" id="location" name="location" required placeholder="Enter location">
+                  <input type="text" id="location" name="location" required>
                   <label for="location">Location</label>
                 </div>
               </div>
               <div class="row">
                 <div class="input-field col s12">
-                  <textarea id="shiftDetails" name="shiftDetails" class="materialize-textarea" required placeholder="Enter shift details"></textarea>
+                  <textarea id="shiftDetails" name="shiftDetails" class="materialize-textarea" required></textarea>
                   <label for="shiftDetails">Shift Details</label>
                 </div>
               </div>
               <div class="row">
                 <div class="input-field col s12">
-                  <button type="submit" class="btn" style="background-color: #0077ff;">Submit Job</button>
+                  <button type="submit" class="btn">Submit Job</button>
                 </div>
               </div>
             </form>
           </div>
         </div>
+        <div id="successMessage" style="display: none; text-align: center; color: green;"></div>
       </div>
     </div>
     <div class="row">
       <div class="col s12 center-align">
-        <a href="/dashboard" style="color: #0077ff; text-decoration: none;">Back to Dashboard</a>
+        <a href="/dashboard">Back to Dashboard</a>
       </div>
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    M.AutoInit();
-    M.updateTextFields();
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function(e) {
-      e.preventDefault(); // Prevent default form submission
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData);
-      console.log('Form data:', data);
-      fetch('/api/jobs', {
-        method: 'POST',
-        body: new URLSearchParams(data),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-        .then(response => response.json())
-        .then(data => console.log('Success:', data))
-        .catch(error => console.error('Error:', error));
-      // Disable the form temporarily to prevent multiple submissions
-      this.querySelector('button[type="submit"]').disabled = true;
-      setTimeout(() => {
-        this.querySelector('button[type="submit"]').disabled = false;
-      }, 2000); // Re-enable after 2 seconds
-    }, { once: true }); // Ensure the event listener runs only once per page load
-  });
+    document.addEventListener('DOMContentLoaded', function() {
+      M.AutoInit();
+      M.updateTextFields();
+      const form = document.querySelector('#jobForm');
+      const card = document.querySelector('#jobFormCard');
+      const successMsg = document.querySelector('#successMessage');
+      if (!form || !card || !successMsg) console.error('Required elements not found');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        console.log('Form data:', data);
+        console.log('Sending fetch request to /api/jobs...');
+        fetch('/api/jobs', {
+          method: 'POST',
+          body: new URLSearchParams(data),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+          .then(response => {
+            console.log('Fetch response status:', response.status);
+            console.log('Response headers:', response.headers);
+            if (response.status !== 201) {
+              throw new Error(`Expected 201, got ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Success:', data);
+            card.style.display = 'none'; // Hide the form card
+            successMsg.style.display = 'block';
+            successMsg.textContent = 'Job created successfully!';
+            setTimeout(() => {
+              card.style.display = 'block'; // Show the form again after 3 seconds
+              successMsg.style.display = 'none';
+              form.reset();
+              M.updateTextFields();
+            }, 3000);
+          })
+          .catch(error => console.error('Fetch error:', error));
+        this.querySelector('button[type="submit"]').disabled = true;
+        setTimeout(() => {
+          this.querySelector('button[type="submit"]').disabled = false;
+        }, 2000);
+      });
+    });
   </script>
 </body>
 </html>
