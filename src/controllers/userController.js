@@ -12,8 +12,8 @@ const generateToken = (user) => {
 // Register
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-    const user = new User({ name, email, password, role });
+    const { name, email, password, role, state, createdAt } = req.body;
+    const user = new User({ name, email, password, role, state, createdAt });
     await user.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
