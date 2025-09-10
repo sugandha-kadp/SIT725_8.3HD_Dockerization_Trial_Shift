@@ -1,0 +1,56 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+}
+
+.card {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  height: 568px;
+}
+
+.input-field input,
+.input-field select,
+.input-field textarea {
+  background-color: #ffffff;
+}
+
+.input-field input::placeholder,
+.input-field textarea::placeholder {
+  color: black !important;
+}
+
+.btn {
+  background-color: #0077ff !important;
+  border-radius: 10px;
+  padding: 0 75px;
+}
+
+.btn:hover {
+  background-color: #005cbf !important;
+}
+
+a {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: #0077ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.input-field>label 
+{
+    color: #000000;
+}

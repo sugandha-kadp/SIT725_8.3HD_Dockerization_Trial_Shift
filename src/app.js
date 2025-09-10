@@ -13,21 +13,31 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
 
+// Routes
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "/login.html"));
 });
+
+const userRoutes = require("./routes/userRoutes");
+app.use("/", userRoutes);
+
+// Add job-post route
+app.get("/job-post", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "/job-post.html"));
+});
+
+const jobRoutes = require("./routes/jobRoutes");
+app.use("/api", jobRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.error("MongoDB connection error:", err));
-
-// Routes
-const userRoutes = require("./routes/userRoutes");
-app.use("/api/users", userRoutes); 
+  .then(() => {
+    console.log("MongoDB connected to:", mongoose.connection.db.databaseName);
+  })
+  .catch(err => console.error("MongoDB connection error:", err));
 
 // Start server
 app.listen(PORT, () => {
