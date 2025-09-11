@@ -107,3 +107,56 @@ exports.bulkDeleteJobs = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// Get category counts
+exports.getCategoryCounts = async (req, res) => {
+  try {
+    const allCategories = ['kitchenhand', 'cleaning', 'delivery', 'waiter', 'barista', 'pickpacker'];
+    const categoryDocs = await Category.find({ name: { $in: allCategories } });
+
+    const categoryMap = {};
+    categoryDocs.forEach(cat => {
+      categoryMap[cat.name.toLowerCase()] = cat._id;
+    });
+
+    const categoriesWithCounts = await Job.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'categoryDetails'
+        }
+      },
+      {
+        $unwind: '$categoryDetails'
+      },
+      {
+        $project: {
+          name: '$categoryDetails.name',
+          count: 1
+        }
+      }
+    ]);
+
+    const categoryCounts = allCategories.map(name => {
+      const foundCat = categoriesWithCounts.find(cat => cat.name.toLowerCase() === name.toLowerCase()) || { name, count: 0 };
+      return {
+        name: foundCat.name,
+        count: foundCat.count
+      };
+    });
+
+    console.log('Category counts (raw):', categoryCounts);
+    res.status(200).json(categoryCounts);
+  } catch (error) {
+    console.error('Error fetching category counts:', error.message);
+    res.status(500).json({ message: 'Error fetching category counts' });
+  }
+}; 
