@@ -30,6 +30,11 @@ app.get("/job-post", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "/job-post.html"));
 });
 
+// Add category-counts route
+app.get("/category-counts", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "/category-counts.html"));
+});
+
 const jobRoutes = require("./routes/jobRoutes");
 app.use("/api", jobRoutes);
 
