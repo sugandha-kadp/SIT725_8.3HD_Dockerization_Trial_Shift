@@ -40,6 +40,8 @@ group-project
    npm install
 
    npm install express mongoose dotenv jsonwebtoken bcrypt
+
+   npm install multer
    ```
 
 3. **Environment Variables**

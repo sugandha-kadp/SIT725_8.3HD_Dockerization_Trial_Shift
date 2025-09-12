@@ -168,6 +168,19 @@ body {
   background: #34495e;
 }
 
+.sidebar a {
+  color: inherit;           
+  text-decoration: none;   
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar a:hover {
+  color: #fff;
+}
+
 /* Main content */
 .main-content {
   margin-left: 250px;
