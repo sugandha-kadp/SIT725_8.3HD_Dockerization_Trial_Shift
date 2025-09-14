@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const { register, login, getProfile, updateProfile, deleteProfilePicture } = require("../controllers/userController");
+const adminController = require("../controllers/adminController");
 const { authenticate, authorize } = require("../middleware/authMiddleware");
 
 // Multer config for profile image
@@ -43,5 +44,14 @@ router.put("/profile", authenticate, upload.single("profileImage"), updateProfil
 
 // Delete profile picture
 router.delete("/profile/picture", authenticate, deleteProfilePicture);
+
+// ======================
+//  Admin Management
+// ======================
+
+// Profile requests
+router.get("/profile-requests", authenticate, authorize("admin"), adminController.getPendingProfileRequests);
+router.post("/profile-requests/:id/approve", authenticate, authorize("admin"), adminController.approveProfileUpdate);
+router.post("/profile-requests/:id/decline", authenticate, authorize("admin"), adminController.declineProfileUpdate);
 
 module.exports = router;

@@ -18,8 +18,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "/login.html"));
 });
 
+// Routes
 const userRoutes = require("./routes/userRoutes");
-app.use("/", userRoutes);
+app.use("/api/users", userRoutes); 
 
 // Add job-post route
 app.get("/job-post", (req, res) => {

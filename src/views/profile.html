@@ -137,6 +137,16 @@
         </div>
       </div>
 
+      <!-- Pending approval banner -->
+      <div id="pendingBanner" style="display:none; background:#fff3cd; color:#856404; padding:10px; border-radius:6px; margin-bottom:16px;">
+        Pending profile update waiting for admin review.
+      </div>
+
+      <!-- Declined update banner -->
+      <div id="declinedBanner" style="display:none; background:#f8d7da; color:#721c24; padding:10px; border-radius:6px; margin-bottom:16px;">
+        Your last profile update was declined. Please update your profile again.
+      </div>
+
       <!-- Form -->
       <form id="profileForm">
         <div class="form-grid">
@@ -200,6 +210,20 @@
         } else {
           preview.style.display = "none";
           delBtn.style.display = "none";
+        }
+
+        if (user.pendingApproval) {
+          document.getElementById('pendingBanner').style.display = 'block';
+        }
+
+        if (user.pendingApproval === null && user.lastDeclinedUpdate) {
+          document.getElementById('declinedBanner').style.display = 'block';
+
+          // clear the flag after showing once
+          fetch("/api/users/profile/clear-decline", {
+            method: "POST",
+            headers: { Authorization: "Bearer " + token }
+          });
         }
       } catch (err) {
         showErr(err.message);

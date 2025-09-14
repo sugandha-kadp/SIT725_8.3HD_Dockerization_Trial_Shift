@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const ProfileUpdateRequest = require("../models/profileUpdateRequest");
 
 // Generate JWT token
 const generateToken = (user) => {
@@ -76,7 +77,14 @@ exports.updateProfile = async (req, res) => {
       profilePic: req.file ? "/uploads/" + req.file.filename : undefined
     };
 
+    // Save pending update to user
     await User.findByIdAndUpdate(req.user.id, { pendingApproval: updates });
+
+    // Create a profile update request
+    await ProfileUpdateRequest.create({
+      user: req.user.id,
+      updates
+    });
 
     res.json({ message: "Profile update submitted for admin approval." });
   } catch (err) {
