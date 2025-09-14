@@ -40,7 +40,7 @@ function loadSidebar() {
       { name: "Notifications", icon: "notifications", url: "/notifications.html" },
       { name: "Courses", icon: "school", url: "/courses.html" },
       { name: "Users", icon: "group", url: "/users.html" },
-      { name: "Review Request", icon: "assignment", url: "/review-requests.html" },
+      { name: "Review Request", icon: "assignment", url: "/review-request.html" },
       { name: "Manage Jobs", icon: "settings", url: "/manage-jobs.html" }
     ];
   } else if (user.role === "employer") {
