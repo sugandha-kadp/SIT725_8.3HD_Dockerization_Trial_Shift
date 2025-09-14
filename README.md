@@ -26,8 +26,13 @@ group-project
 ├── .env
 └── README.md
 ```
-
+## Stack
+- **Node.js / Express**
+- **MongoDB / Mongoose**
+- **Materialize CSS**
+- **Vanilla JavaScript**
 ## Setup Instructions
+
 
 1. **Clone the Repository**
    ```bash
@@ -57,6 +62,24 @@ group-project
 ## Usage
 - Navigate to the main page at `http://localhost:5000` to access the application.
 - Use the user-related functionalities available on the user page.
+
+## Job Preferences API
+
+- `GET /api/job-preferences` → list current user’s preferences
+- `POST /api/job-preferences` → create one
+  - body: { preferredLocation, preferredCategories[], programmingLanguages[] }
+- `PUT /api/job-preferences/:id` → update one
+- `DELETE /api/job-preferences/:id` → delete one
+- `DELETE /api/job-preferences` → bulk delete
+  - body: { ids: ["...", "..."] }
+
+  # Job Preferences App (Node.js + Express + MongoDB)
+
+A simple CRUD app for **Job Preferences** with:
+- Create / Read / Update / Delete
+- **Bulk delete** with “Select All”
+- Fields: `preferredLocation`, `preferredCategories[]`
+- UI: **Materialize CSS** ( HTML + vanilla JS)
 
 ## Contributing
 Feel free to contribute to this project by submitting issues or pull requests. Make sure to follow the coding standards and project structure.
