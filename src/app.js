@@ -35,6 +35,10 @@ app.get("/category-counts", (req, res) => {
 const jobRoutes = require("./routes/jobRoutes");
 app.use("/api", jobRoutes);
 
+// Job Preference Routes
+const jobPreferenceRoutes = require('./routes/jobPreferenceRoutes');
+app.use('/api/job-preferences', jobPreferenceRoutes);
+
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
