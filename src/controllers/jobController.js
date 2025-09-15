@@ -125,18 +125,14 @@ exports.getCategoryCounts = async (req, res) => {
           _id: '$category',
           count: { $sum: 1 }
         }
-      },
-      {
+      },      {
         $lookup: {
           from: 'categories',
           localField: '_id',
           foreignField: '_id',
           as: 'categoryDetails'
-        }
-      },
-      {
-        $unwind: '$categoryDetails'
-      },
+        }      },
+      {        $unwind: '$categoryDetails'},
       {
         $project: {
           name: '$categoryDetails.name',
@@ -160,3 +156,50 @@ exports.getCategoryCounts = async (req, res) => {
     res.status(500).json({ message: 'Error fetching category counts' });
   }
 }; 
+
+// Apply for a job
+exports.applyForJob = async (req, res) => {
+  try {
+    const { jobId, applicantName, coverLetter } = req.body;
+    const employerId = '12345'; // Temporary placeholder ID (for job owner check)
+
+    if (!jobId || !applicantName || !coverLetter) {
+      throw new Error('All fields (jobId, applicantName, coverLetter) are required');
+    }
+
+    const job = await Job.findOne({ _id: jobId, employerId });
+
+    if (!job) {
+      return res.status(404).json({ message: 'Job not found or unauthorized' });
+    }
+
+    job.applications.push({ applicantName, coverLetter, appliedAt: new Date() });
+    const updatedJob = await job.save();
+
+    console.log('Application added:', updatedJob);
+    res.status(201).json({ message: 'Application submitted successfully', jobId: updatedJob._id });
+  } catch (error) {
+    console.error('Error applying for job:', error.message);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Get available jobs
+exports.getJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ employerId: '12345' })
+      .populate('category', 'name') // Populate only the name field from Category
+      .select('title location shiftDetails _id category');
+    console.log('Fetched jobs with categories (raw):', jobs); // Detailed debug log
+    if (jobs.length === 0) {
+      console.log('No jobs found with employerId: 12345');
+    }
+    res.status(200).json(jobs.map(job => ({
+      ...job.toObject(),
+      category: job.category ? job.category.name : 'Unknown'
+    })));
+  } catch (error) {
+    console.error('Error fetching jobs:', error.message);
+    res.status(500).json({ message: 'Error fetching jobs' });
+  }
+};

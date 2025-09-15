@@ -7,6 +7,8 @@ router.post('/jobs', jobController.createJob); // route for job post
 router.put('/jobs/:id', jobController.updateJob); // route for update
 router.delete('/jobs/bulk', jobController.bulkDeleteJobs); // route for bulk delete
 router.delete('/jobs/:id', jobController.deleteJob); // route for deleting
-router.get('/categories/counts', jobController.getCategoryCounts); // New route for category counts
+router.get('/categories/counts', jobController.getCategoryCounts); // route for category counts
+router.post('/jobs/apply', jobController.applyForJob); // route for job application
+router.get('/jobs', jobController.getJobs); // route for getting available jobs
 
 module.exports = router;
