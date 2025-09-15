@@ -139,7 +139,6 @@
             </div>
           </div>
 
-
           <!-- Actions -->
           <div class="form-actions">
             <button id="btnCancelAdd" class="btn-soft" type="button">Cancel</button>
@@ -157,13 +156,88 @@
       </div>
     </section>
 
+    <!-- DETAILS (merged from course-details.html) -->
+    <section id="course-details" class="card block" style="display:none;">
+      <div class="card__left">
+        <button id="btnBackFromDetails" class="chip-btn">
+          <i class="material-icons tiny">arrow_back</i> Back
+        </button>
+        <h4 id="detailsTitle" class="h-title"></h4>
+        <p id="detailsMeta" class="muted"></p>
+        <div id="detailsContent" class="soft-text"></div>
+        <div id="detailsActions" class="controls-row" style="display:none;">
+          <button id="btnEditFromDetails" class="chip-btn"><i class="material-icons tiny">edit</i> Edit</button>
+        </div>
+      </div>
+      <div class="card__right">
+        <img src="/img/learning.png" alt="learn" class="hero-illus"/>
+      </div>
+    </section>
+
+    <!-- EDIT (merged from edit-course.html) -->
+    <section id="courses-edit" class="card block" style="display:none;">
+      <div class="card__left">
+        <h4 class="h-title">Edit Course</h4>
+        <input type="hidden" id="editId"/>
+        <div class="form-table">
+          <div class="form-row">
+            <div class="form-label">Title</div>
+            <div class="form-field"><input id="editTitle" class="soft-input" type="text" /></div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Job Category</div>
+            <div class="form-field">
+              <select id="editCategory" class="soft-input" style="display:block;">
+                <option value="devops">DevOps</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="cleaning">Cleaning</option>
+                <option value="delivery">Delivery</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Role</div>
+            <div class="form-field">
+              <select id="editRole" class="soft-input" style="display:block;">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row form-row-top">
+            <div class="form-label">Course Content</div>
+            <div class="form-field">
+              <textarea id="editCourseContent" class="soft-input soft-textarea"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Quiz Required</div>
+            <div class="form-field">
+              <label style="display:inline-flex;align-items:center;gap:10px;">
+                <input id="editQuizReq" type="checkbox"/><span>Required</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button id="btnCancelEdit" class="btn-soft" type="button">Cancel</button>
+            <button id="btnSaveEdit" class="btn-cta" type="button">Save</button>
+          </div>
+          <div id="editError" class="help-error" style="display:none;"></div>
+          <div id="editSuccess" class="help-success" style="display:none;">Updated!</div>
+        </div>
+      </div>
+      <div class="card__right">
+        <img src="/img/learning.png" alt="learn" class="hero-illus"/>
+      </div>
+    </section>
+
   <!-- States -->
   <div id="courses-error" class="help-error" style="display:none;">Failed to load modules. Please try again later.</div>
   <div id="courses-empty" class="help-muted" style="display:none;">No courses yet.</div>
   </main>
 
   <!-- Scripts -->
-  <script src="/js/main.js"></script>
   <script>
     // ---- Sidebar nav & auth ----
     function parseJwt(token) { try { return JSON.parse(atob(token.split('.')[1])); } catch { return null; } }
