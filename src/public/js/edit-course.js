@@ -8,7 +8,7 @@
     $('#editError').style.display = 'block';
     return;
   }
-  const API = `/api/content/modules/${id}`;
+  const API = `/api/courses/modules/${id}`;
   const editTitle = $('#editTitle');
   const editCategory = $('#editCategory');
   const editRole = $('#editRole');

@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		modulesErrorState.style.display = 'none';
 		try {
 			// TODO: Replace with real API endpoint
-			const res = await fetch('/api/content/modules');
+			const res = await fetch('/api/courses/modules');
 			if (!res.ok) throw new Error('API error');
 			const data = await res.json();
 			allModules = data.modules || [];

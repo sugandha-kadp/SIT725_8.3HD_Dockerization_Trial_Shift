@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   if (!id) return;
-  const API = `/api/content/modules/${id}`;
+  const API = `/api/courses/modules/${id}`;
 
   async function loadCourse() {
     try {

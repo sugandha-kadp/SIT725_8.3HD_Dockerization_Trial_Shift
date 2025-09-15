@@ -1,5 +1,5 @@
 (function(){
-  const API = "/api/content";
+  const API = "/api/courses";
   const $ = (s)=>document.querySelector(s);
 
   // Views
