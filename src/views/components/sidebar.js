@@ -59,8 +59,6 @@ function loadSidebar() {
       { name: "Courses", icon: "school", url: "/courses.html" },
       { name: "Job Preferences", icon: "thumb_up", url: "/job-Preferences.html" },
       { name: "Job Matches", icon: "merge_type", url: "/job-matches.html" },
-      { name: "Job Preferences", icon: "thumb_up", url: "/job-Preferences.html" },
-      { name: "Job Matches", icon: "merge_type", url: "/job-Matches.html" }
     ];
   }
 
