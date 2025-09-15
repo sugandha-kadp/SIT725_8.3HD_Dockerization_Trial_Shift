@@ -9,7 +9,22 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.set('Content-Type', 'text/css');
+    } else if (path.endsWith('.js')) {
+      res.set('Content-Type', 'application/javascript');
+    }
+  }
+}));
+/*app.use('/views/components', express.static(path.join(__dirname, "views", "components"), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.set('Content-Type', 'application/javascript');
+    }
+  }
+}));*/
 
 // Pages
 app.get("/", (req, res) => {
@@ -35,8 +50,6 @@ const jobRoutes = require("./routes/jobRoutes");
 app.use("/api", jobRoutes);
 const jobPreferenceRoutes = require("./routes/jobPreferenceRoutes");
 app.use("/api/job-preferences", jobPreferenceRoutes);
-const jobMatchRoutes = require("./routes/jobMatchRoutes");
-app.use("/api/jobs", jobMatchRoutes);
 const courseRoutes = require("./routes/courseRoutes");
 app.use("/api/courses", courseRoutes);
 
