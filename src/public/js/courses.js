@@ -111,7 +111,9 @@
     if(name==="edit" && data) renderEditView(data);
     if(name==="details" && data) renderDetailsView(data);
     if (pills) pills.style.display = (name==="home") ? "flex" : "none";
-    btnManageCourses && (btnManageCourses.style.display = "inline-flex");
+    if (btnManageCourses) {
+      btnManageCourses.style.display = isAdmin() ? "inline-flex" : "none";
+    }
   }
 
   // Fetch all modules
