@@ -1,0 +1,12 @@
+const express = require('express');
+const router = express.Router();
+const jobController = require('../controllers/jobController');
+
+// Protect these routes with authentication middleware (to be added later)
+router.post('/jobs', jobController.createJob); // route for job post
+router.put('/jobs/:id', jobController.updateJob); // route for update
+router.delete('/jobs/bulk', jobController.bulkDeleteJobs); // route for bulk delete
+router.delete('/jobs/:id', jobController.deleteJob); // route for deleting
+router.get('/categories/counts', jobController.getCategoryCounts); // New route for category counts
+
+module.exports = router;
