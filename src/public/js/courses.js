@@ -44,8 +44,6 @@
     }
   });
 })();
-// Combined Courses JS: includes logic from main.js, courses-tab.js, edit-course.js, and course-details.js
-// This file replaces all previous course-related JS files.
 
 (function(){
   // Utility
@@ -56,8 +54,8 @@
   const vHome = $("#courses-home");
   const vManage = $("#courses-manage");
   const vAdd = $("#courses-add");
-  const vEdit = $("#courses-edit"); // Will be created dynamically
-  const vDetails = $("#courses-details"); // Will be created dynamically
+  const vEdit = $("#courses-edit"); 
+  const vDetails = $("#courses-details"); 
   const pills = $("#courses-pills");
   const btnManageCourses = $("#btnManageCourses");
   const btnAddCourse = $("#btnAddCourse");
@@ -105,7 +103,7 @@
     vHome && (vHome.style.display = name==="home" ? "grid" : "none");
     vManage && (vManage.style.display = name==="manage" ? "grid" : "none");
     vAdd && (vAdd.style.display = name==="add" ? "grid" : "none");
-    // Details and Edit views are created dynamically
+    
     let vEdit = $("#courses-edit");
     let vDetails = $("#courses-details");
     vEdit && (vEdit.style.display = name==="edit" ? "grid" : "none");
@@ -139,41 +137,24 @@
 
   // Render Home (pill list)
   function renderHome(){
-    const total = state.all.length;
-    const limit = 5;
-    const pages = Math.max(1, Math.ceil(total / limit));
-    if (!state.homePage || state.homePage > pages) state.homePage = 1;
-    const start = (state.homePage-1)*limit;
-    const list = state.all.slice(start, start + limit);
-    coursesEmpty && (coursesEmpty.style.display = list.length ? "none":"block");
+    const list = state.all;
+    coursesEmpty && (coursesEmpty.style.display = list.length ? "none" : "block");
     if (!pills) return;
-    pills.innerHTML = list.map(p => `<div class="pill" data-id="${p.id}">${escapeHtml(p.title)}</div>`).join("");
+
+    pills.innerHTML = list
+      .map(p => `<div class="pill" data-id="${p.id}">${escapeHtml(p.title)}</div>`)
+      .join("");
+
     pills.querySelectorAll('.pill').forEach(el => {
       el.addEventListener('click', function(){
         const id = this.getAttribute('data-id');
         setView("details", id);
       });
     });
-    // Render pagination bar for home view
-    let homePager = document.getElementById("courses-home-pagination");
-    if (!homePager) {
-      homePager = document.createElement("div");
-      homePager.id = "courses-home-pagination";
-      homePager.className = "pagination";
-      pills && pills.parentNode && pills.parentNode.insertBefore(homePager, pills.nextSibling);
-    }
-    let html = "";
-    for(let i=1;i<=pages;i++){
-      html += `<button class="page-btn ${i===state.homePage?'active':''}" data-page="${i}" style="display:inline-block;">${i}</button>`;
-    }
-    homePager.innerHTML = html;
-    homePager.style.display = "flex";
-    homePager.querySelectorAll(".page-btn").forEach(b=>{
-      b.addEventListener("click", ()=>{
-        state.homePage = Number(b.dataset.page);
-        renderHome();
-      });
-    });
+
+
+    const homePager = document.getElementById("courses-home-pagination");
+    if (homePager) homePager.remove();
   }
 
   // Render Manage
@@ -289,7 +270,7 @@
 
   // Edit
   async function onEdit(id){
-    // Fetch course and show edit view
+    // Fetch course
     const res = await fetch(`${API}/modules/${id}`, { headers: { ...authHeader() } });
     if(!res.ok){ alert("Failed to fetch course"); return; }
     const m = await res.json();

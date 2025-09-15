@@ -27,8 +27,8 @@
 
   <!-- Main content -->
   <main class="main-content">
-    <!-- HERO: Courses -->
-    <section id="courses-home" class="card block">
+    <!-- HERO -->
+    <section id="courses-home" class="card block" style="display:none;">
       <div class="card__left">
         <h4 class="h-title">Courses</h4>
         <p class="muted">
@@ -45,14 +45,14 @@
     </section>
 
     <!-- Pill list -->
-    <section class="pill-list" id="courses-pills"></section>
+    <section class="pill-list" id="courses-pills" style="display:none;"></section>
 
-    <!-- MANAGE (admin only) -->
-    <section id="courses-manage" class="card block" style="display:none;">
+    <!-- MANAGE -->
+    <section id="courses-manage" class="card block" style="display:block;">
       <div class="card__left">
-        <h4 class="h-title">Manage Courses</h4>
+        <h4 id="manageHeading" class="h-title">Courses</h4>
         <p class="muted">Explore courses tailored to your career path. Manage and organize content here.</p>
-        <div class="controls-row">
+        <div class="controls-row admin-only">
           <button id="btnAddCourse" class="chip-btn"><i class="material-icons tiny">add</i> Add</button>
         </div>
 
@@ -71,8 +71,8 @@
           </div>
         </div>
 
-  <div id="manage-list" class="manage-list"></div>
-  <div id="manage-pagination" class="pagination"></div>
+        <div id="manage-list" class="manage-list"></div>
+        <div id="manage-pagination" class="pagination"></div>
       </div>
       <div class="card__right">
         <img src="/img/learning.png" alt="learn" class="hero-illus"/>
@@ -92,7 +92,7 @@
               <input id="addTitle" class="soft-input" type="text" placeholder="Enter course title" required />
             </div>
           </div>
-          <!-- Job Category (Selectable) -->
+          <!-- Job Category -->
           <div class="form-row">
             <div class="form-label">Job Category</div>
             <div class="form-field">
@@ -106,7 +106,7 @@
             </div>
           </div>
 
-          <!-- Role (Selectable) -->
+          <!-- Role -->
           <div class="form-row">
             <div class="form-label">Role</div>
             <div class="form-field">
@@ -156,7 +156,7 @@
       </div>
     </section>
 
-    <!-- DETAILS (merged from course-details.html) -->
+    <!-- DETAILS -->
     <section id="course-details" class="card block" style="display:none;">
       <div class="card__left">
         <button id="btnBackFromDetails" class="chip-btn">
@@ -165,7 +165,7 @@
         <h4 id="detailsTitle" class="h-title"></h4>
         <p id="detailsMeta" class="muted"></p>
         <div id="detailsContent" class="soft-text"></div>
-        <div id="detailsActions" class="controls-row" style="display:none;">
+        <div id="detailsActions" class="controls-row admin-only" style="display:none;">
           <button id="btnEditFromDetails" class="chip-btn"><i class="material-icons tiny">edit</i> Edit</button>
         </div>
       </div>
@@ -174,7 +174,7 @@
       </div>
     </section>
 
-    <!-- EDIT (merged from edit-course.html) -->
+    <!-- EDIT -->
     <section id="courses-edit" class="card block" style="display:none;">
       <div class="card__left">
         <h4 class="h-title">Edit Course</h4>
@@ -239,7 +239,7 @@
 
   <!-- Scripts -->
   <script>
-    // ---- Sidebar nav & auth ----
+
     function parseJwt(token) { try { return JSON.parse(atob(token.split('.')[1])); } catch { return null; } }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -277,6 +277,28 @@
       menuList.innerHTML = menuItems
         .map(i => `<li class="sidebar-link" onclick="location.href='${i.href}'"><i class="material-icons">${i.icon}</i> ${i.name}</li>`)
         .join("");
+
+     
+      const isAdmin = user.role === "admin";
+  
+      const manageSection = document.getElementById("courses-manage");
+      if (manageSection) manageSection.style.display = "block";
+     
+      const hero = document.getElementById("courses-home");
+      const pills = document.getElementById("courses-pills");
+      if (hero) hero.style.display = "none";
+      if (pills) pills.style.display = "none";
+
+      document.querySelectorAll(".admin-only").forEach(el => {
+        el.style.display = isAdmin ? "" : "none";
+      });
+      const heading = document.getElementById("manageHeading");
+      if (heading) heading.textContent = isAdmin ? "Manage Courses" : "Courses";
+
+      const detailsActions = document.getElementById("detailsActions");
+      if (detailsActions) {
+        detailsActions.style.display = isAdmin ? "" : "none";
+      }
     });
 
     document.getElementById('logoutBtn').addEventListener('click', function () {
@@ -284,7 +306,6 @@
     });
   </script>
 
-  <!-- Courses page logic -->
   <script src="/js/courses.js"></script>
 </body>
 </html>
