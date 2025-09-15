@@ -5,20 +5,27 @@ This project is a web application built using Node.js, Vanilla JavaScript, HTML 
 
 ## Project Structure
 ```
-group-project
+Trial_Shift
 ├── src
 │   ├── controllers
+│   │   └── jobController.js
 │   │   └── userController.js
 │   ├── models
+│   │   └── job.js
 │   │   └── user.js
+│   │   └── category.js
 │   ├── routes
+│   │   └── jobRoutes.js
 │   │   └── userRoutes.js
 │   ├── views
-│   │   ├── index.html
-│   │   └── user.html
+│   │   ├── login.html
+│   │   ├── job-post.html
+│   │   ├── category-counts.html
+│   │   └── job-apply.html
 │   ├── public
 │   │   ├── css
-│   │   │   └── style.css
+│   │   │   ├── styles.css
+│   │   │   └── job-post.css
 │   │   └── js
 │   │       └── main.js
 │   └── app.js
@@ -26,6 +33,7 @@ group-project
 ├── .env
 └── README.md
 ```
+
 ## Stack
 - **Node.js / Express**
 - **MongoDB / Mongoose**
@@ -61,6 +69,10 @@ group-project
 
 ## Usage
 - Navigate to the main page at `http://localhost:5000` to access the application.
+Navigate to http://localhost:3000 for the login page.
+Use http://localhost:3000/job-post to create, update, or delete job postings.
+Use http://localhost:3000/category-counts to view job counts by category.
+Use http://localhost:3000/job-apply to apply for available jobs.
 - Use the user-related functionalities available on the user page.
 
 ## Job Preferences API
@@ -72,6 +84,25 @@ group-project
 - `DELETE /api/job-preferences/:id` → delete one
 - `DELETE /api/job-preferences` → bulk delete
   - body: { ids: ["...", "..."] }
+
+- Job Management
+
+POST /api/jobs → Create a new job
+Body: { title, category, location, shiftDetails }
+
+PUT /api/jobs/:id → Update a job
+Body: { title, category, location, shiftDetails }
+
+DELETE /api/jobs/:id → Delete a job
+DELETE /api/jobs/bulk → Bulk delete jobs
+Body: { jobIds: ["...", "..."] }
+
+GET /api/jobs → List available jobs
+POST /api/jobs/apply → Apply for a job
+Body: { jobId, applicantName, coverLetter }
+
+- Category Management
+GET /api/categories/counts → Get job counts by category
 
   # Job Preferences App (Node.js + Express + MongoDB)
 

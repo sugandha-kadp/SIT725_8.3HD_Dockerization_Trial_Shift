@@ -10,22 +10,20 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "views"))); // serve static HTML/CSS/JS in views if needed
 
 // Pages
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "login.html"));
 });
-
 app.get("/job-post", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "job-post.html"));
 });
-
 app.get("/category-counts", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "category-counts.html"));
 });
-
-// Optional: Course page (keep if you have views/courses.html)
+app.get("/job-apply", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "/job-apply.html"));
+});
 app.get("/courses", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "courses.html"));
 });
@@ -33,16 +31,12 @@ app.get("/courses", (req, res) => {
 // API routes
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);
-
 const jobRoutes = require("./routes/jobRoutes");
 app.use("/api", jobRoutes);
-
 const jobPreferenceRoutes = require("./routes/jobPreferenceRoutes");
 app.use("/api/job-preferences", jobPreferenceRoutes);
-
 const jobMatchRoutes = require("./routes/jobMatchRoutes");
 app.use("/api/jobs", jobMatchRoutes);
-
 const courseRoutes = require("./routes/courseRoutes");
 app.use("/api/courses", courseRoutes);
 
