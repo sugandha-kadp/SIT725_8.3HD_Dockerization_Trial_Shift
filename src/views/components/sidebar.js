@@ -41,7 +41,8 @@ function loadSidebar() {
       { name: "Courses", icon: "school", url: "/courses.html" },
       { name: "Users", icon: "group", url: "/users.html" },
       { name: "Review Request", icon: "assignment", url: "/review-request.html" },
-      { name: "Manage Jobs", icon: "settings", url: "/manage-jobs.html" }
+      { name: "Manage Jobs", icon: "settings", url: "/manage-jobs.html" },
+      { name: "Job Preferences", icon: "thumb_up", url: "/job-Preferences.html" }
     ];
   } else if (user.role === "employer") {
     menuItems = [
@@ -55,7 +56,8 @@ function loadSidebar() {
       { name: "Dashboard", icon: "dashboard", url: "/dashboard.html" },
       { name: "Jobs", icon: "work", url: "/jobs.html" },
       { name: "Notifications", icon: "notifications", url: "/notifications.html" },
-      { name: "Courses", icon: "school", url: "/courses.html" }
+      { name: "Courses", icon: "school", url: "/courses.html" },
+      { name: "Job Preferences", icon: "thumb_up", url: "/job-Preferences.html" }
     ];
   }
 
