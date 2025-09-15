@@ -20,6 +20,10 @@ router.get('/modules', authenticate, contentController.getModules);
 // Users: Fetch module details and assets
 router.get('/modules/:id', authenticate, contentController.getModuleById);
 
+
+// Admin: Delete a module
+router.delete('/modules/:id', authenticate, authorize('admin'), contentController.deleteModule);
+
 // Admin: Update or archive a module
 router.patch('/modules/:id', authenticate, authorize('admin'), contentController.updateModule);
 

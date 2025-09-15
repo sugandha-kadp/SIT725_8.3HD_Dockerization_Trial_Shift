@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Courses</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/img/logo.png" alt="Logo">
+    </div>
+    <ul id="menuList"></ul>
+  </div>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-right">
+      <i class="material-icons profile-icon">account_circle</i>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="main-content">
+    <!-- HERO: Courses -->
+    <section id="courses-home" class="card block">
+      <div class="card__left">
+        <h4 class="h-title">Courses</h4>
+        <p class="muted">
+          Explore courses tailored to your career path. Whether you're just starting out or advancing in your field,
+          this is your hub for professional learning—unlock access to all the skills and knowledge you need, right here.
+        </p>
+        <button id="btnManageCourses" class="chip-btn">
+          <i class="material-icons tiny">build</i> Manage Courses
+        </button>
+      </div>
+      <div class="card__right">
+        <img src="/img/learning.png" alt="learn" class="hero-illus"/>
+      </div>
+    </section>
+
+    <!-- Pill list -->
+    <section class="pill-list" id="courses-pills"></section>
+
+    <!-- MANAGE (admin only) -->
+    <section id="courses-manage" class="card block" style="display:none;">
+      <div class="card__left">
+        <h4 class="h-title">Manage Courses</h4>
+        <p class="muted">Explore courses tailored to your career path. Manage and organize content here.</p>
+        <div class="controls-row">
+          <button id="btnAddCourse" class="chip-btn"><i class="material-icons tiny">add</i> Add</button>
+        </div>
+
+        <div class="filters-row" style="display:flex;">
+          <div class="filter">
+            <label for="filterCategory">Job Category</label>
+            <select id="filterCategory" class="soft-input" style="display:block;">
+              <option value="">All</option>
+            </select>
+          </div>
+          <div class="filter">
+            <label for="filterRole">Role</label>
+            <select id="filterRole" class="soft-input" style="display:block;">
+              <option value="">All</option>
+            </select>
+          </div>
+        </div>
+
+  <div id="manage-list" class="manage-list"></div>
+  <div id="manage-pagination" class="pagination"></div>
+      </div>
+      <div class="card__right">
+        <img src="/img/learning.png" alt="learn" class="hero-illus"/>
+      </div>
+    </section>
+
+    <!-- ADD (admin only) -->
+  <section id="courses-add" class="card block">
+      <div class="card__left">
+        <h4 class="h-title">Add Courses</h4>
+
+        <!-- Table-like layout -->
+        <div class="form-table">
+
+          <!-- Title -->
+          <div class="form-row">
+            <div class="form-label">Title</div>
+            <div class="form-field">
+              <input id="addTitle" class="soft-input" type="text" placeholder="Enter course title" required />
+            </div>
+          </div>
+          <!-- Job Category (Selectable) -->
+          <div class="form-row">
+            <div class="form-label">Job Category</div>
+            <div class="form-field">
+              <select id="addCategory" class="soft-input" required style="display:block;">
+                <option value="">Select Category</option>
+                <option value="devops">DevOps</option>
+                <option value="kitchen">Kitchen</option>
+                <option value="cleaning">Cleaning</option>
+                <option value="delivery">Delivery</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Role (Selectable) -->
+          <div class="form-row">
+            <div class="form-label">Role</div>
+            <div class="form-field">
+              <select id="addRole" class="soft-input" required style="display:block;">
+                <option value="">Select Role</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Course Content -->
+          <div class="form-row form-row-top">
+            <div class="form-label">Course Content</div>
+            <div class="form-field">
+              <textarea id="addContent" class="soft-input soft-textarea"
+                placeholder="Paste notes, outline, or links here..."></textarea>
+            </div>
+          </div>
+
+          <!-- Quiz Required -->
+          <div class="form-row">
+            <div class="form-label">Quiz Required to Complete Course</div>
+            <div class="form-field">
+              <label style="display:inline-flex;align-items:center;gap:10px;">
+                <input id="addQuizReq" type="checkbox"/>
+                <span>Required</span>
+              </label>
+            </div>
+          </div>
+
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button id="btnCancelAdd" class="btn-soft" type="button">Cancel</button>
+            <button id="btnSaveAdd" class="btn-cta" type="button">Save</button>
+          </div>
+
+          <!-- Messages -->
+          <div id="addError" class="help-error" style="display:none;"></div>
+          <div id="addSuccess" class="help-success" style="display:none;">Saved!</div>
+        </div>
+      </div>
+
+      <div class="card__right">
+        <img src="/img/learning.png" alt="learn" class="hero-illus"/>
+      </div>
+    </section>
+
+  <!-- States -->
+  <div id="courses-error" class="help-error" style="display:none;">Failed to load modules. Please try again later.</div>
+  <div id="courses-empty" class="help-muted" style="display:none;">No courses yet.</div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="/js/main.js"></script>
+  <script>
+    // ---- Sidebar nav & auth ----
+    function parseJwt(token) { try { return JSON.parse(atob(token.split('.')[1])); } catch { return null; } }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const token = localStorage.getItem("token");
+      if (!token) return (window.location.href = "/");
+      const user = parseJwt(token); if (!user) return (window.location.href = "/");
+
+      const menuList = document.getElementById("menuList");
+      let menuItems = [];
+      if (user.role === "admin") {
+        menuItems = [
+          { name: "Dashboard", icon: "dashboard", href: "/dashboard.html" },
+          { name: "Jobs", icon: "work", href: "/dashboard.html" },
+          { name: "Notifications", icon: "notifications", href: "/dashboard.html" },
+          { name: "Courses", icon: "school", href: "/courses.html" },
+          { name: "Users", icon: "group", href: "/dashboard.html" },
+          { name: "Review Request", icon: "assignment", href: "/dashboard.html" },
+          { name: "Manage Jobs", icon: "settings", href: "/dashboard.html" }
+        ];
+      } else if (user.role === "employer") {
+        menuItems = [
+          { name: "Dashboard", icon: "dashboard", href: "/dashboard.html" },
+          { name: "Job Management", icon: "work", href: "/dashboard.html" },
+          { name: "Notifications", icon: "notifications", href: "/dashboard.html" },
+          { name: "Courses", icon: "school", href: "/courses.html" }
+        ];
+      } else {
+        menuItems = [
+          { name: "Dashboard", icon: "dashboard", href: "/dashboard.html" },
+          { name: "Jobs", icon: "work", href: "/dashboard.html" },
+          { name: "Notifications", icon: "notifications", href: "/dashboard.html" },
+          { name: "Courses", icon: "school", href: "/courses.html" }
+        ];
+      }
+      menuList.innerHTML = menuItems
+        .map(i => `<li class="sidebar-link" onclick="location.href='${i.href}'"><i class="material-icons">${i.icon}</i> ${i.name}</li>`)
+        .join("");
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = '/';
+    });
+  </script>
+
+  <!-- Courses page logic -->
+  <script src="/js/courses-tab.js"></script>
+</body>
+</html>
+ 

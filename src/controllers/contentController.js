@@ -1,10 +1,24 @@
+// Delete a module
+exports.deleteModule = async (req, res) => {
+  try {
+    const module = await Module.findByIdAndDelete(req.params.id);
+    if (!module) return res.status(404).json({ error: 'Module not found' });
+    res.json({ message: 'Module deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 const Module = require('../models/module');
 
 
 // Create a new module
 exports.createModule = async (req, res) => {
   try {
-    // Validation logic 
+    // Validation logic
+    const { title, category } = req.body;
+    if (!title || !category) {
+      return res.status(400).json({ error: 'Title and Category are required.' });
+    }
     const module = new Module(req.body);
     await module.save();
     res.status(201).json(module);

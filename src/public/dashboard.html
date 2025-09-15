@@ -41,8 +41,12 @@
     <main class="main-content">
         <h4 class="welcome">Welcome to Dashboard</h4>
         <p id="welcomeMessage"></p>
+        <div id="tab-dashboard" class="tab-content">
+            <!-- Existing dashboard content can go here -->
+        </div>
     </main>
 
+    <script src="/js/main.js"></script>
     <script>
         // Decode JWT
         function parseJwt(token) {
@@ -97,9 +101,29 @@
                 ];
             }
 
+
+            // Render sidebar with clickable navigation
             menuList.innerHTML = menuItems
-                .map(item => `<li><i class="material-icons">${item.icon}</i> ${item.name}</li>`)
+                .map(item => `<li class="sidebar-link" data-tab="${item.name.toLowerCase().replace(/ /g, '-')}"><i class="material-icons">${item.icon}</i> ${item.name}</li>`)
                 .join("");
+
+            // Sidebar navigation click handler (navigate to courses.html for Courses)
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    if (tabName === 'courses') {
+                        window.location.href = '/courses.html';
+                    } else if (tabName === 'dashboard') {
+                        document.getElementById('tab-dashboard').style.display = 'block';
+                        // Hide other content if needed
+                        if (document.getElementById('tab-courses')) document.getElementById('tab-courses').style.display = 'none';
+                    }
+                    // Add more tab handling as needed
+                });
+            });
+
+            // Show dashboard content by default
+            document.getElementById('tab-dashboard').style.display = 'block';
         });
 
         // Logout function

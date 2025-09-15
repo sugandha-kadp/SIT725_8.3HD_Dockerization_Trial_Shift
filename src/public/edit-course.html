@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Course</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/img/logo.png" alt="Logo">
+    </div>
+    <ul id="menuList"></ul>
+  </div>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-right">
+      <i class="material-icons profile-icon">account_circle</i>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="card block">
+      <div class="card__left">
+        <h4 class="h-title">Edit Course</h4>
+        <div class="form-table">
+          <div class="form-row">
+            <div class="form-label">Title</div>
+            <div class="form-field">
+              <input id="editTitle" class="soft-input" type="text" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Job Category</div>
+            <div class="form-field">
+              <input id="editCategory" class="soft-input" type="text" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-label">Role</div>
+            <div class="form-field">
+              <input id="editRole" class="soft-input" type="text" required />
+            </div>
+          </div>
+          <div class="form-row form-row-top">
+            <div class="form-label">Course Content</div>
+            <div class="form-field">
+              <textarea id="editContent" class="soft-input soft-textarea"></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button id="btnCancelEdit" class="btn-soft" type="button">Cancel</button>
+            <button id="btnSaveEdit" class="btn-cta" type="button">Save</button>
+          </div>
+          <div id="editError" class="help-error" style="display:none;"></div>
+          <div id="editSuccess" class="help-success" style="display:none;">Saved!</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---- Sidebar nav & auth ----
+    function parseJwt(token) { try { return JSON.parse(atob(token.split('.')[1])); } catch { return null; } }
+    document.addEventListener("DOMContentLoaded", () => {
+      const token = localStorage.getItem("token");
+      if (!token) return (window.location.href = "/");
+      const user = parseJwt(token); if (!user) return (window.location.href = "/");
+      const menuList = document.getElementById("menuList");
+      let menuItems = [];
+      if (user.role === "admin") {
+        menuItems = [
+          { name: "Dashboard", icon: "dashboard", href: "/dashboard.html" },
+          { name: "Jobs", icon: "work", href: "/dashboard.html" },
+          { name: "Notifications", icon: "notifications", href: "/dashboard.html" },
+          { name: "Courses", icon: "school", href: "/courses.html" },
+          { name: "Users", icon: "group", href: "/dashboard.html" },
+          { name: "Review Request", icon: "assignment", href: "/dashboard.html" },
+          { name: "Manage Jobs", icon: "settings", href: "/dashboard.html" }
+        ];
+      } else if (user.role === "employer") {
+        menuItems = [
+          { name: "Dashboard", icon: "dashboard", href: "/dashboard.html" },
+          { name: "Job Management", icon: "work", href: "/dashboard.html" },
+          { name: "Notifications", icon: "notifications", href: "/dashboard.html" },
+          { name: "Courses", icon: "school", href: "/courses.html" }
+        ];
+      } else {
+        menuItems = [
+          { name: "Dashboard", icon: "dashboard", href: "/dashboard.html" },
+          { name: "Jobs", icon: "work", href: "/dashboard.html" },
+          { name: "Notifications", icon: "notifications", href: "/dashboard.html" },
+          { name: "Courses", icon: "school", href: "/courses.html" }
+        ];
+      }
+      menuList.innerHTML = menuItems
+        .map(i => `<li class="sidebar-link" onclick="location.href='${i.href}'"><i class="material-icons">${i.icon}</i> ${i.name}</li>`)
+        .join("");
+    });
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = '/';
+    });
+  </script>
+  <script src="/js/edit-course.js"></script>
+</body>
+</html>
