@@ -49,7 +49,7 @@ function loadSidebar() {
       { name: "Job Management", icon: "work", url: "/job-post.html" },
       { name: "Notifications", icon: "notifications", url: "/notifications.html" },
       { name: "Courses", icon: "school", url: "/courses.html" },
-      { name: "Job Post", icon: "post_add", url: "/job-post" } 
+      { name: "Job Post", icon: "post_add", url: "/job-post.html" } 
     ];
   } else {
     menuItems = [
