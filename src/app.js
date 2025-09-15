@@ -39,6 +39,10 @@ app.use("/api", jobRoutes);
 const jobPreferenceRoutes = require('./routes/jobPreferenceRoutes');
 app.use('/api/job-preferences', jobPreferenceRoutes);
 
+// Job Match Routes
+const jobMatchRoutes = require('./routes/jobMatchRoutes');
+app.use('/api/jobs', jobMatchRoutes);
+
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

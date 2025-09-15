@@ -12,4 +12,12 @@ const jobSchema = new mongoose.Schema
   }
 );
 
+// keep a normalized location for searching
+jobSchema.pre('save', function(next){
+  this.locationLower = (this.location || '').trim().toLowerCase();
+  next();
+});
+
+// helpful compound index for queries
+jobSchema.index({ category: 1, locationLower: 1, createdAt: -1 });
 module.exports = mongoose.model('Job', jobSchema);
