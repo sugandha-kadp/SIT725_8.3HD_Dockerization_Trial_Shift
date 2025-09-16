@@ -1,16 +1,5 @@
 const Module = require('../models/module');
 
-// Delete a module
-exports.deleteModule = async (req, res) => {
-  try {
-    const mod = await Module.findByIdAndDelete(req.params.id);
-    if (!mod) return res.status(404).json({ error: 'Module not found' });
-    res.json({ message: 'Module deleted' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
 // Create a new module
 exports.createModule = async (req, res) => {
   try {
@@ -50,6 +39,18 @@ exports.uploadAssets = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+// Delete a module
+exports.deleteModule = async (req, res) => {
+  try {
+    const mod = await Module.findByIdAndDelete(req.params.id);
+    if (!mod) return res.status(404).json({ error: 'Module not found' });
+    res.json({ message: 'Module deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 // Fetch all modules
 exports.getModules = async (req, res) => {
