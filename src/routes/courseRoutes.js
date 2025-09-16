@@ -30,4 +30,7 @@ router.patch('/modules/:id', authenticate, authorize('admin'), courseController.
 // Admin: Publish a new version
 router.post('/modules/:id/release', authenticate, authorize('admin'), courseController.releaseModule);
 
+// Admin: Bulk delete modules
+router.delete('/modules/bulk-delete', authenticate, authorize('admin'), courseController.bulkDeleteCourses);
+
 module.exports = router;

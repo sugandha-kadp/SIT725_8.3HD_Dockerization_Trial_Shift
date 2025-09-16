@@ -75,6 +75,11 @@
   const coursesError = $("#courses-error");
   const coursesEmpty = $("#courses-empty");
 
+  const bulkActions = $("#bulk-actions");
+  const selectedCount = $("#selected-count");
+  const btnDeleteSelected = $("#btnDeleteSelected");
+  const btnCancelBulk = $("#btnCancelBulk");
+
   const API = "/api/courses";
   let state = {
     all: [],
@@ -82,7 +87,8 @@
     limit: 5,
     homePage: 1,
     category: "",
-    role: ""
+    role: "",
+    selectedCourses: [],
   };
 
   // Auth helpers
@@ -172,6 +178,7 @@
     const pageItems = filtered.slice(start, start + state.limit);
     manageList.innerHTML = pageItems.map(m=>`
       <div class="manage-item" data-id="${m.id}">
+        <input type="checkbox" class="course-checkbox" data-id="${m.id}" />
         <div class="manage-title">${escapeHtml(m.title)}</div>
         <div class="manage-actions">
           <button class="icon-btn js-edit" title="Edit"><i class="material-icons">edit</i></button>
@@ -202,7 +209,47 @@
     manageList.querySelectorAll(".js-edit").forEach(btn=>{
       btn.addEventListener("click", ()=> onEdit(btn.closest(".manage-item").dataset.id));
     });
+
+    manageList.querySelectorAll(".course-checkbox").forEach(checkbox => {
+      checkbox.addEventListener("change", () => handleCheckboxChange());
+    });
   }
+
+  function handleCheckboxChange() {
+    state.selectedCourses = Array.from(manageList.querySelectorAll(".course-checkbox:checked")).map(cb => cb.dataset.id);
+    if (state.selectedCourses.length > 0) {
+      bulkActions.style.display = "flex";
+      selectedCount.textContent = `${state.selectedCourses.length} selected`;
+    } else {
+      bulkActions.style.display = "none";
+    }
+  }
+
+  async function onBulkDelete() {
+    if (state.selectedCourses.length === 0) {
+      return alert("No courses selected for deletion.");
+    }
+    if (!confirm(`Are you sure you want to delete ${state.selectedCourses.length} courses?`)) {
+      return;
+    }
+    try {
+      const res = await fetch(`${API}/modules/bulk-delete`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", ...authHeader() },
+        body: JSON.stringify({ ids: state.selectedCourses }),
+      });
+      if (!res.ok) {
+        throw new Error("Bulk delete failed");
+      }
+      await loadAll();
+      state.selectedCourses = [];
+      handleCheckboxChange();
+    } catch (error) {
+      console.error("Bulk delete error:", error);
+      alert("Failed to delete courses. Please try again.");
+    }
+  }
+
 
   // Render Add
   async function onSave(){
@@ -450,6 +497,12 @@
     btnSaveAdd && btnSaveAdd.addEventListener("click", onSave);
     filterCategory && filterCategory.addEventListener("change", ()=>{ state.category = filterCategory.value; state.page=1; renderManage(); });
     filterRole && filterRole.addEventListener("change", ()=>{ state.role = filterRole.value; state.page=1; renderManage(); });
+    btnDeleteSelected && btnDeleteSelected.addEventListener("click", onBulkDelete);
+    btnCancelBulk && btnCancelBulk.addEventListener("click", () => {
+      state.selectedCourses = [];
+      manageList.querySelectorAll(".course-checkbox").forEach(cb => cb.checked = false);
+      handleCheckboxChange();
+    });
   });
   document.addEventListener("DOMContentLoaded", loadAll);
 })();

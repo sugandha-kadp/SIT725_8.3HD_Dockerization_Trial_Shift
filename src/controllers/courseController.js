@@ -97,3 +97,17 @@ exports.releaseModule = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Bulk delete courses
+exports.bulkDeleteCourses = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Invalid or empty IDs array' });
+    }
+    await Module.deleteMany({ _id: { $in: ids } });
+    res.status(200).json({ message: 'Courses deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
