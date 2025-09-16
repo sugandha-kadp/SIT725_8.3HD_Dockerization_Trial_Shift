@@ -111,7 +111,7 @@ exports.bulkDeleteJobs = async (req, res) => {
 // Get category counts
 exports.getCategoryCounts = async (req, res) => {
   try {
-    const allCategories = ['kitchenhand', 'cleaning', 'delivery', 'waiter', 'barista', 'pickpacker'];
+    const allCategories = ['kitchenhand', 'accounting', 'delivery', 'waiter', 'barista', 'pickpacker'];
     const categoryDocs = await Category.find({ name: { $in: allCategories } });
 
     const categoryMap = {};

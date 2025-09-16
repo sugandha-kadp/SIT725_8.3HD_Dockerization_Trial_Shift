@@ -471,7 +471,7 @@
 
   // Filters
   function computeFilters(){
-    const dummyCats = ['kitchen','cleaning','delivery','devops'];
+    const dummyCats = ['kitchen','accounting','delivery','devops'];
     const cats = [...new Set([...dummyCats, ...state.all.map(m=>m.category).filter(Boolean)])].sort();
     filterCategory.innerHTML = `<option value="">All</option>` + cats.map(c=>`<option value="${c}">${escapeHtml(cap(c))}</option>`).join("");
     addCategory.innerHTML = `<option value="">Select Category</option>` + cats.map(c=>`<option value="${c}">${escapeHtml(cap(c))}</option>`).join("");
