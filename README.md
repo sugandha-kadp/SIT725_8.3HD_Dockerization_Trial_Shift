@@ -1,46 +1,60 @@
 # Trial Shift
 
 ## Overview
+
 This project is a web application built using Node.js, Vanilla JavaScript, HTML & CSS (Materialize), and MongoDB. It follows the MVC (Model-View-Controller) architecture, ensuring a clear separation of concerns.
 
 ## Project Structure
+
 ```
 group-project
 ├── src
 │   ├── controllers
-│   │   └── userController.js
+│   │   ├── userController.js
+│   │   └── courseController.js
 │   ├── models
-│   │   └── user.js
+│   │   ├── user.js
+│   │   ├── course.js
+│   │   ├── category.js
+│   │   └── module.js
 │   ├── routes
-│   │   └── userRoutes.js
+│   │   ├── userRoutes.js
+│   │   └── courseRoutes.js
 │   ├── views
 │   │   ├── index.html
-│   │   └── user.html
+│   │   ├── user.html
+│   │   └── courses.html
 │   ├── public
 │   │   ├── css
-│   │   │   └── style.css
+│   │   │   ├── style.css
+│   │   │   └── courses.css
 │   │   └── js
-│   │       └── main.js
+│   │       ├── main.js
+│   │       └── courses.js
 │   └── app.js
 ├── package.json
 ├── .env
 └── README.md
 ```
+
 ## Stack
+
 - **Node.js / Express**
 - **MongoDB / Mongoose**
 - **Materialize CSS**
 - **Vanilla JavaScript**
+
 ## Setup Instructions
 
-
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/S224734529/SIT725_Trial_Shift.git
    ```
 
 2. **Install Dependencies**
    Make sure you have Node.js installed. Then run:
+
    ```bash
    npm install
 
@@ -60,6 +74,7 @@ group-project
    The application will be running on `http://localhost:5000`.
 
 ## Usage
+
 - Navigate to the main page at `http://localhost:5000` to access the application.
 - Use the user-related functionalities available on the user page.
 
@@ -71,18 +86,44 @@ group-project
 - `PUT /api/job-preferences/:id` → update one
 - `DELETE /api/job-preferences/:id` → delete one
 - `DELETE /api/job-preferences` → bulk delete
+
   - body: { ids: ["...", "..."] }
 
   # Job Preferences App (Node.js + Express + MongoDB)
 
+## Cousrse Content Management API
+
+- `GET /api/modules` → list all modules
+  - Query params:
+    - category (optional)
+    - search (optional, searches title)
+    - visibility (optional)
+- `GET /api/modules/:id` → get a specific module
+- `POST /api/modules` → create a new module
+  - body: { title, category } (both required)
+- `PUT /api/modules/:id` → update a module
+- `DELETE /api/modules/:id` → delete a module
+- `DELETE /api/modules` → bulk delete
+  - body: { ids: ["...", "..."] }
+- `POST /api/modules/:id/assets` → upload assets to a module
+  - body:
+    - type: string
+    - title: string
+    - text: string (if type is 'text')
+    - url: string (for non-text assets)
+- `POST /api/modules/:id/release` → publish a new version of a module
+
 A simple CRUD app for **Job Preferences** with:
+
 - Create / Read / Update / Delete
 - **Bulk delete** with “Select All”
 - Fields: `preferredLocation`, `preferredCategories[]`
 - UI: **Materialize CSS** ( HTML + vanilla JS)
 
 ## Contributing
+
 Feel free to contribute to this project by submitting issues or pull requests. Make sure to follow the coding standards and project structure.
 
 ## License
+
 This project is licensed under the MIT License.
