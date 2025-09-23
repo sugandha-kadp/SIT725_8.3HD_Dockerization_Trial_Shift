@@ -3,7 +3,7 @@ const User = require("../models/user");
 // Get all users (admin only)
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find({ role: { $ne: "admin" } }).select("-password");
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch users." });

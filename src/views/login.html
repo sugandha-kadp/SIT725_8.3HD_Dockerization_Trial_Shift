@@ -127,7 +127,12 @@
 
       const data = await res.json();
       if (res.ok && data.token) {
-        // save JWT token
+        
+        console.log("User Details: " + res.status + " " + JSON.stringify(data));
+        if (data.user && data.user.active === false) {
+          showError('login', 'Your account is inactive. Please contact admin for assistance.');
+          return;
+        }
         localStorage.setItem("token", data.token);
         showSuccess('login', 'Login successful! Redirecting...');
         setTimeout(() => {
@@ -175,7 +180,7 @@
         return;
       }
 
-      const res = await fetch('/api/users/register', {   // 🔑 updated endpoint
+      const res = await fetch('/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, state, role })
