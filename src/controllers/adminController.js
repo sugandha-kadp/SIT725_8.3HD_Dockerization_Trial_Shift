@@ -45,7 +45,7 @@ exports.declineProfileUpdate = async (req, res) => {
     // Remove pendingApproval from user and set lastDeclinedUpdate
     await User.findByIdAndUpdate(request.user._id, {
       $unset: { pendingApproval: "" },
-      $set: { lastDeclinedUpdate: new Date() }
+      $set: { lastDeclinedUpdate: { date: new Date(), reason: request.reason || "" } }
     });
 
     // Update request status

@@ -1,38 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Page</title>
-    <link rel="stylesheet" href="../public/css/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1>User Information</h1>
-        <div id="user-info">
-            <!-- User information will be displayed here -->
-        </div>
-        <div class="row">
-            <form id="user-form" class="col s12">
-                <div class="input-field col s6">
-                    <input type="text" id="name" required>
-                    <label for="name">Name</label>
-                </div>
-                <div class="input-field col s6">
-                    <input type="email" id="email" required>
-                    <label for="email">Email</label>
-                </div>
-                <div class="input-field col s6">
-                    <input type="password" id="password" required>
-                    <label for="password">Password</label>
-                </div>
-                <div class="input-field col s6">
-                    <button type="submit" class="btn">Submit</button>
-                </div>
-            </form>
-        </div>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar"></div>
+
+     <div class="main-content" style="max-width: 700px; margin: 40px auto;">
+        <h2>User Information</h2>
     </div>
     <script src="../public/js/main.js"></script>
+    <script src="/components/sidebar.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadSidebar();
+
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "/";
+                return;
+            }
+
+            const user = JSON.parse(atob(token.split('.')[1]));
+            document.getElementById("welcomeMessage").textContent =
+                `Hello, ${user.name} (${user.role})`;
+
+            // Navigate to profile page
+            document.getElementById("profileBtn").addEventListener("click", () => {
+                window.location.href = "profile.html";
+            });
+
+            // Logout
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.location.href = "/";
+            });
+        });
+    </script>
 </body>
+
 </html>
