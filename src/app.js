@@ -25,6 +25,10 @@ app.get("/category-counts", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "category-counts.html"));
 });
 
+app.get("/job-preferences", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "job-preferences.html"));
+});
+
 // Optional: Course page (keep if you have views/courses.html)
 app.get("/courses", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "courses.html"));
