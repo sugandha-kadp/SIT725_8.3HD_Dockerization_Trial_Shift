@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ["admin", "employer", "jobseeker"], default: "jobseeker" },
   profilePicture: { type: String },
   state: { type: String, required: true },
+  active: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });
 
