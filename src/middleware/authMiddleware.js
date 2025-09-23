@@ -1,7 +1,20 @@
 const jwt = require("jsonwebtoken");
 
 exports.authenticate = (req, res, next) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
+  // Bearer header first
+  let token = req.headers["authorization"]?.split(" ")[1];
+  // Fallback - read from cookies
+  if (!token && req.headers.cookie) {
+    const cookies = Object.fromEntries(
+      req.headers.cookie.split(';').map(p => {
+        const i = p.indexOf('=');
+        const k = decodeURIComponent(p.slice(0, i).trim());
+        const v = decodeURIComponent(p.slice(i + 1));
+        return [k, v];
+      })
+    );
+    token = cookies.token || null;
+  }
   if (!token) return res.status(401).json({ message: "No token, authorization denied" });
 
   try {

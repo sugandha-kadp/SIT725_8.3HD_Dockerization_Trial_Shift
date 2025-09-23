@@ -38,6 +38,15 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     const token = generateToken(user);
+    // Set httpOnly cookie 
+    try {
+      res.cookie('token', token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: !!process.env.COOKIE_SECURE,
+        maxAge: 60 * 60 * 1000 // 1 hour
+      });
+    } catch {}
     res.json({
       token,
       user: {
@@ -58,9 +67,21 @@ exports.login = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-    res.json(user);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Check for pending profile update request
+    const pendingRequest = await ProfileUpdateRequest.findOne({
+      user: req.user.id,
+      status: "pending"
+    });
+
+    // Add a flag to the response
+    const userObj = user.toObject();
+    userObj.pendingApproval = !!pendingRequest;
+
+    res.json(userObj);
   } catch (err) {
-    res.status(500).json({ message: "Failed to load profile." });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
