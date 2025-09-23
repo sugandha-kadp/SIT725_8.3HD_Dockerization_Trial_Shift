@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/admin-user.css">
 </head>
 
 <body>
@@ -35,9 +36,39 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal-overlay" style="display:none;">
+      <div class="modal-content">
+        <span id="confirmMessage"></span>
+        <div style="margin-top:18px;">
+          <button onclick="confirmAction()" class="modal-close-btn" style="background:#43a047;">Yes</button>
+          <button onclick="closeConfirmModal()" class="modal-close-btn" style="background:#e53935;">No</button>
+        </div>
+      </div>
+    </div>
+
     <script src="/js/main.js"></script>
     <script src="/components/sidebar.js"></script>
     <script>
+        let confirmCallback = null;
+
+        function showConfirm(message, callback) {
+          document.getElementById('confirmMessage').textContent = message;
+          document.getElementById('confirmModal').style.display = 'flex';
+          confirmCallback = callback;
+        }
+
+        function closeConfirmModal() {
+          document.getElementById('confirmModal').style.display = 'none';
+          confirmCallback = null;
+        }
+
+        function confirmAction() {
+          if (confirmCallback) confirmCallback();
+          closeConfirmModal();
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             loadSidebar();
 
@@ -71,21 +102,23 @@
                         </td>
                     </tr>
                 `).join("");
+                updateBulkDeleteBtnVisibility();
             }
 
-            // Remove user
-            window.removeUser = async function(id) {
-                if (!confirm("Are you sure you want to permanently delete this user?")) return;
-                const res = await fetch(`/api/admin/users/${id}`, {
-                    method: "DELETE",
-                    headers: { Authorization: "Bearer " + token }
+            // Remove user with popup confirmation
+            window.removeUser = function(id) {
+                showConfirm("Are you sure you want to permanently delete this user?", async function() {
+                    const res = await fetch(`/api/admin/users/${id}`, {
+                        method: "DELETE",
+                        headers: { Authorization: "Bearer " + token }
+                    });
+                    if (res.ok) fetchUsers();
                 });
-                if (res.ok) fetchUsers();
             };
 
             // Toggle user active/inactive
             window.toggleUserActive = async function(id, isActive) {
-                isActive = (isActive === "true"); 
+                isActive = (isActive === "true");
                 const res = await fetch(`/api/admin/users/${id}/active`, {
                     method: "PUT",
                     headers: {
@@ -97,30 +130,46 @@
                 if (res.ok) fetchUsers();
             };
 
-            // Bulk delete
+            // Bulk delete with popup confirmation
             document.getElementById("bulkDeleteBtn").addEventListener("click", async () => {
                 const checked = Array.from(document.querySelectorAll(".userCheckbox:checked")).map(cb => cb.value);
                 if (checked.length === 0) return;
-                if (!confirm("Delete selected users permanently?")) return;
-                const res = await fetch("/api/admin/users/bulk-delete", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token
-                    },
-                    body: JSON.stringify({ ids: checked })
+                showConfirm("Delete selected users permanently?", async function() {
+                    const res = await fetch("/api/admin/users/bulk-delete", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + token
+                        },
+                        body: JSON.stringify({ ids: checked })
+                    });
+                    if (res.ok) fetchUsers();
                 });
-                if (res.ok) fetchUsers();
             });
 
             // Select all checkbox
             document.getElementById("selectAll").addEventListener("change", function() {
                 document.querySelectorAll(".userCheckbox").forEach(cb => cb.checked = this.checked);
+                updateBulkDeleteBtnVisibility();
             });
+
+            function updateBulkDeleteBtnVisibility() {
+                const checked = document.querySelectorAll(".userCheckbox:checked");
+                document.getElementById("bulkDeleteBtn").style.display = checked.length > 0 ? "inline-block" : "none";
+            }
+
+            // Update visibility when checkboxes change
+            document.addEventListener("change", function(e) {
+                if (e.target.classList.contains("userCheckbox") || e.target.id === "selectAll") {
+                    updateBulkDeleteBtnVisibility();
+                }
+            });
+
+            // Hide button initially
+            document.getElementById("bulkDeleteBtn").style.display = "none";
 
             fetchUsers();
         });
     </script>
 </body>
-
 </html>
