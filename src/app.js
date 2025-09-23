@@ -30,6 +30,12 @@ app.get("/courses", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "courses.html"));
 });
 
+// Admin-only manage courses page
+const { authenticate, authorize } = require("./middleware/authMiddleware");
+app.get("/courses/manage", authenticate, authorize('admin'), (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "courses.html"));
+});
+
 // API routes
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/users", userRoutes);

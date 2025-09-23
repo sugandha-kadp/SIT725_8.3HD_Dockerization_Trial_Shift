@@ -38,6 +38,15 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     const token = generateToken(user);
+    // Set httpOnly cookie 
+    try {
+      res.cookie('token', token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: !!process.env.COOKIE_SECURE,
+        maxAge: 60 * 60 * 1000 // 1 hour
+      });
+    } catch {}
     res.json({
       token,
       user: {
