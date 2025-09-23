@@ -167,11 +167,6 @@
           document.getElementById('declineModal').style.display = 'flex';
         }
 
-        function closeDeclineModal() {
-          document.getElementById('declineModal').style.display = 'none';
-          declineRequestId = null;
-        }
-
         async function submitDeclineReason() {
           const reason = document.getElementById('declineReasonInput').value;
           closeDeclineModal();
@@ -196,6 +191,10 @@
 
         function declineRequest(id) {
           showDeclineModal(id);
+        }
+
+         function closeDeclineModal() {
+          document.getElementById('declineModal').style.display = 'none';
         }
 
         fetchRequests();

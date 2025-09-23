@@ -39,7 +39,7 @@ function loadSidebar() {
       { name: "Dashboard", icon: "dashboard", url: "/dashboard.html" },
       { name: "Notifications", icon: "notifications", url: "/notifications.html" },
       { name: "Courses", icon: "school", url: "/courses.html" },
-      { name: "Users", icon: "group", url: "/users.html" },
+      { name: "Users", icon: "group", url: "/user.html" },
       { name: "Review Request", icon: "assignment", url: "/review-request.html" },
       { name: "Manage Jobs", icon: "settings", url: "/manage-jobs.html" }
     ];

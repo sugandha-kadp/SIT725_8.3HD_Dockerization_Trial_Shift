@@ -38,7 +38,8 @@
 
       <!-- Declined update banner -->
       <div id="declinedBanner" style="display:none; background:#f8d7da; color:#721c24; padding:10px; border-radius:6px; margin-bottom:16px;">
-        Your last profile update was declined. Please update your profile again.
+        <span id="declinedText">Your last profile update was declined. Please update your profile again.</span>
+        <div id="declinedReason" style="margin-top:6px; font-size:0.98em;"></div>
       </div>
 
       <!-- Form -->
@@ -110,9 +111,10 @@
           document.getElementById('pendingBanner').style.display = 'block';
         }
 
-        if (user.pendingApproval === null && user.lastDeclinedUpdate) {
+        if (!user.pendingApproval && user.lastDeclinedUpdate) {
           document.getElementById('declinedBanner').style.display = 'block';
-
+          document.getElementById('declinedReason').textContent =
+            user.lastDeclinedUpdate.reason ? "Reason: " + user.lastDeclinedUpdate.reason : "";
           // clear the flag after showing once
           fetch("/api/users/profile/clear-decline", {
             method: "POST",
