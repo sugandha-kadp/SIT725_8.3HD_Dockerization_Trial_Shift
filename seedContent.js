@@ -35,11 +35,11 @@ const modules = [
     notifications: [],
   },
   {
-    title: 'Cleaning Standards',
-    description: 'Understand cleaning protocols and standards.',
+    title: 'Accounting Standards',
+    description: 'Understand Accounting protocols and standards.',
     assets: [
-      { type: 'video', url: 'https://youtu.be/cleaning-standards', title: 'Cleaning Video', order: 1 },
-      { type: 'text', text: 'Always use gloves and approved cleaning agents.', title: 'Cleaning Tips', order: 2 },
+      { type: 'video', url: 'https://youtu.be/Accounting-standards', title: 'Accounting Video', order: 1 },
+      { type: 'text', text: 'Always use gloves and approved Accounting agents.', title: 'Accounting Tips', order: 2 },
     ],
     reactions: [],
     releases: [
