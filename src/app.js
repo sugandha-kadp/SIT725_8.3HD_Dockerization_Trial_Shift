@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -59,6 +58,7 @@ const jobPreferenceRoutes = require("./routes/jobPreferenceRoutes");
 app.use("/api/job-preferences", jobPreferenceRoutes);
 const courseRoutes = require("./routes/courseRoutes");
 app.use("/api/courses", courseRoutes);
+app.use("/api/admin", require("./routes/adminUserRoutes"));
 
 
 // MongoDB connection
