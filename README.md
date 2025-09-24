@@ -13,7 +13,7 @@ This project is a web application built using Node.js, Vanilla JavaScript, HTML 
    ```
 2. Run the container 
    ```bash
-   docker run --env-file .env -e PORT=8080 -p 5001:8080 trial-shift:latest
+   docker run --env-file .env -p 5001:5001 trial-shift:latest
    ```
 3. Open the app at `http://localhost:5001`.
 
