@@ -59,7 +59,8 @@ app.use("/api/job-preferences", jobPreferenceRoutes);
 const courseRoutes = require("./routes/courseRoutes");
 app.use("/api/courses", courseRoutes);
 app.use("/api/admin", require("./routes/adminUserRoutes"));
-
+const studentRoutes = require("./routes/studentRoute");
+app.use("/api/student", studentRoutes);
 
 // MongoDB connection
 mongoose
